@@ -22,7 +22,12 @@ Vercel sangat mudah digunakan karena terintegrasi langsung dengan GitHub.
 1.  Masuk ke [Vercel](https://vercel.com/) menggunakan akun GitHub Anda.
 2.  Klik **"Add New"** > **"Project"**.
 3.  Pilih repository `laundry-new-mahkota`.
-4.  Pada bagian **Environment Variables**, tambahkan:
+4.  Pada bagian **Build & Development Settings** (Vercel biasanya otomatis mendeteksi Vite, tapi jika tidak, isi manual):
+    *   Framework Preset: `Vite`
+    *   Build Command: `npm run build`
+    *   Output Directory: `dist`
+    *   Install Command: `npm install`
+5.  Pada bagian **Environment Variables**, tambahkan:
     *   `VITE_SUPABASE_URL`: (Isi dengan URL Supabase Anda)
     *   `VITE_SUPABASE_ANON_KEY`: (Isi dengan Anon Key Supabase Anda)
 5.  Klik **"Deploy"**.
