@@ -1,0 +1,234 @@
+import { supabase } from './supabase';
+import { getNextTransactionNumber } from '../utils/generators';
+
+/**
+ * Get transactions with optional filters
+ */
+export async function getTransactions({ status, search, startDate, endDate, limit = 100 } = {}) {
+    let query = supabase
+        .from('transactions')
+        .select('*, transaction_items(*)')
+        .order('created_at', { ascending: false });
+
+    if (status) {
+        query = query.eq('status', status);
+    }
+
+    if (search) {
+        query = query.or(`transaction_number.ilike.%${search}%,customer_name.ilike.%${search}%,customer_phone.ilike.%${search}%`);
+    }
+
+    if (startDate) {
+        query = query.gte('date_in', startDate);
+    }
+
+    if (endDate) {
+        query = query.lte('date_in', endDate);
+    }
+
+    query = query.limit(limit);
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data;
+}
+
+/**
+ * Get transaction by ID
+ */
+export async function getTransactionById(id) {
+    const { data, error } = await supabase
+        .from('transactions')
+        .select('*, transaction_items(*)')
+        .eq('id', id)
+        .single();
+
+    if (error) throw error;
+    return data;
+}
+
+/**
+ * Get today's stats
+ */
+export async function getTodayStats() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const { data, error } = await supabase
+        .from('transactions')
+        .select('*')
+        .gte('created_at', today.toISOString());
+
+    if (error) throw error;
+
+    const totalTransactions = data.length;
+    const totalRevenue = data.reduce((sum, t) => sum + parseFloat(t.total_amount), 0);
+    const activeOrders = data.filter(t => t.status === 'proses' || t.status === 'selesai').length;
+
+    return {
+        totalTransactions,
+        totalRevenue,
+        activeOrders,
+    };
+}
+
+/**
+ * Create new transaction
+ */
+export async function createTransaction(transactionData, items) {
+    const { customer_id, customer_name, customer_phone, total_amount, paid_amount, status, notes, date_in, date_out, created_by } = transactionData;
+
+    // Generate transaction number
+    const transaction_number = await getNextTransactionNumber(supabase);
+
+    // Insert transaction
+    const { data: transaction, error: transactionError } = await supabase
+        .from('transactions')
+        .insert({
+            transaction_number,
+            customer_id,
+            customer_name,
+            customer_phone,
+            total_amount,
+            paid_amount,
+            status,
+            notes,
+            date_in,
+            date_out,
+            created_by,
+        })
+        .select()
+        .single();
+
+    if (transactionError) throw transactionError;
+
+    // Insert items
+    const itemsToInsert = items.map(item => ({
+        transaction_id: transaction.id,
+        ...item,
+    }));
+
+    const { error: itemsError } = await supabase
+        .from('transaction_items')
+        .insert(itemsToInsert);
+
+    if (itemsError) throw itemsError;
+
+    return transaction;
+}
+
+/**
+ * Update transaction
+ */
+export async function updateTransaction(id, transactionData, items) {
+    // Update transaction
+    const { data: transaction, error: transactionError } = await supabase
+        .from('transactions')
+        .update(transactionData)
+        .eq('id', id)
+        .select()
+        .single();
+
+    if (transactionError) throw transactionError;
+
+    if (items) {
+        // Delete existing items
+        await supabase
+            .from('transaction_items')
+            .delete()
+            .eq('transaction_id', id);
+
+        // Insert new items
+        const itemsToInsert = items.map(item => ({
+            transaction_id: id,
+            ...item,
+        }));
+
+        const { error: itemsError } = await supabase
+            .from('transaction_items')
+            .insert(itemsToInsert);
+
+        if (itemsError) throw itemsError;
+    }
+
+    return transaction;
+}
+
+/**
+ * Update transaction status
+ */
+export async function updateTransactionStatus(id, status) {
+    const { data, error } = await supabase
+        .from('transactions')
+        .update({ status })
+        .eq('id', id)
+        .select()
+        .single();
+
+    if (error) throw error;
+    return data;
+}
+
+/**
+ * Delete transaction
+ */
+export async function deleteTransaction(id) {
+    const { error } = await supabase
+        .from('transactions')
+        .delete()
+        .eq('id', id);
+
+    if (error) throw error;
+}
+
+/**
+ * Get report statistics
+ */
+export async function getReportStats(startDate, endDate) {
+    const { data: transactions, error } = await supabase
+        .from('transactions')
+        .select('*, transaction_items(*)')
+        .gte('date_in', startDate)
+        .lte('date_in', endDate);
+
+    if (error) throw error;
+
+    const totalTransactions = transactions.length;
+    const totalRevenue = transactions.reduce((sum, t) => sum + parseFloat(t.total_amount), 0);
+
+    // Calculate total weight (kg)
+    let totalWeight = 0;
+    transactions.forEach(t => {
+        t.transaction_items.forEach(item => {
+            if (item.unit === 'kg') {
+                totalWeight += parseFloat(item.quantity);
+            }
+        });
+    });
+
+    const averagePerTransaction = totalTransactions > 0 ? totalRevenue / totalTransactions : 0;
+
+    // Breakdown by item type
+    const itemTypeBreakdown = {};
+    transactions.forEach(t => {
+        t.transaction_items.forEach(item => {
+            if (!itemTypeBreakdown[item.item_type]) {
+                itemTypeBreakdown[item.item_type] = {
+                    quantity: 0,
+                    subtotal: 0,
+                };
+            }
+            itemTypeBreakdown[item.item_type].quantity += parseFloat(item.quantity);
+            itemTypeBreakdown[item.item_type].subtotal += parseFloat(item.subtotal);
+        });
+    });
+
+    return {
+        totalTransactions,
+        totalRevenue,
+        totalWeight,
+        averagePerTransaction,
+        itemTypeBreakdown,
+        transactions,
+    };
+}

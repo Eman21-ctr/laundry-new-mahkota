@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Compact spacing system */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 0.75rem;
+    --spacing-lg: 1rem;
+    --spacing-xl: 1.25rem;
+    
+    /* Colors */
+    --color-primary: #3B82F6;
+    --color-primary-dark: #2563EB;
+    --color-primary-light: #DBEAFE;
+    
+    /* Status colors */
+    --color-proses: #F59E0B;
+    --color-selesai: #10B981;
+    --color-diambil: #6B7280;
+  }
+  
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  body {
+    @apply font-sans text-sm text-slate-700 bg-slate-50;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Remove default margins */
+  h1, h2, h3, h4, h5, h6, p {
+    @apply m-0;
+  }
+}
+
+@layer utilities {
+  /* Custom utility classes for compact design */
+  .container-padding {
+    @apply px-md md:px-lg;
+  }
+  
+  .section-gap {
+    @apply space-y-lg;
+  }
+  
+  /* Print styles */
+  @media print {
+    body {
+      @apply bg-white;
+    }
+    
+    .no-print {
+      display: none !important;
+    }
+    
+    @page {
+      size: 58mm auto;
+      margin: 0;
+    }
+  }
+}
