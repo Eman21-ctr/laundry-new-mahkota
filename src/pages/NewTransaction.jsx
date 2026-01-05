@@ -202,14 +202,17 @@ export default function NewTransaction() {
             const total = calculateTotal();
             const estimatedDate = calculateEstimatedDate();
 
+            const paidAmount = formData.paid_amount === '' ? total : (parseFloat(formData.paid_amount.toString().replace(',', '.')) || 0);
+            const paymentMethod = paidAmount === 0 ? '-' : formData.payment_method;
+
             const transaction = await createTransaction(
                 {
                     customer_id: customer.id,
                     customer_name: formData.customer_name.trim(),
                     customer_phone: formData.customer_phone.trim(),
                     total_amount: total,
-                    paid_amount: formData.paid_amount === '' ? total : (parseFloat(formData.paid_amount.toString().replace(',', '.')) || 0),
-                    payment_method: formData.payment_method,
+                    paid_amount: paidAmount,
+                    payment_method: paymentMethod,
                     status: 'proses',
                     notes: formData.notes.trim(),
                     date_in: new Date(formData.date_in).toISOString(),
@@ -460,8 +463,13 @@ export default function NewTransaction() {
                                 </div>
 
                                 {/* Payment Method Integrated */}
-                                <div className="py-2">
-                                    <p className="text-sm font-semibold text-slate-700 mb-2">Pilih Metode Pembayaran:</p>
+                                <div className={`py-2 transition-opacity duration-300 ${(formData.paid_amount !== '' && parseFloat(formData.paid_amount.toString().replace(',', '.')) === 0) ? 'opacity-30 pointer-events-none' : 'opacity-100'}`}>
+                                    <p className="text-sm font-semibold text-slate-700 mb-2">
+                                        Pilih Metode Pembayaran:
+                                        {(formData.paid_amount !== '' && parseFloat(formData.paid_amount.toString().replace(',', '.')) === 0) && (
+                                            <span className="ml-2 text-[10px] text-amber-600 font-normal italic">(Otomatis "-" karena bayar 0)</span>
+                                        )}
+                                    </p>
                                     <div className="grid grid-cols-3 gap-2">
                                         {[
                                             { id: 'Tunai', icon: Money, label: 'Tunai' },
