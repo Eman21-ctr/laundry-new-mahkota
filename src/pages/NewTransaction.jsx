@@ -15,6 +15,7 @@ import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
 import PrintReceipt from '../components/print/PrintReceipt';
+import { useRef } from 'react';
 
 export default function NewTransaction() {
     const navigate = useNavigate();
@@ -610,6 +611,17 @@ export default function NewTransaction() {
                     </Button>
                 </div>
             </Modal>
-        </div>
+            {/* Hidden Print Area - Only visible when printing */}
+            {
+                createdTransaction && (
+                    <div className="hidden print:block absolute top-0 left-0 w-full bg-white z-[9999]">
+                        <PrintReceipt
+                            transaction={createdTransaction}
+                            className="print-content"
+                        />
+                    </div>
+                )
+            }
+        </div >
     );
 }
