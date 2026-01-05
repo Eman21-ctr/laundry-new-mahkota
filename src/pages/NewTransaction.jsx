@@ -28,6 +28,7 @@ export default function NewTransaction() {
         customer_phone: '',
         notes: '',
         payment_method: 'Tunai',
+        paid_amount: '', // Modified to allow manual entry
         date_in: new Date().toISOString().split('T')[0],
     });
     const [items, setItems] = useState([{
@@ -217,7 +218,7 @@ export default function NewTransaction() {
                     customer_name: formData.customer_name.trim(),
                     customer_phone: formData.customer_phone.trim(),
                     total_amount: total,
-                    paid_amount: total, // Assuming full payment for now
+                    paid_amount: parseFloat(formData.paid_amount) || total,
                     payment_method: formData.payment_method,
                     status: 'proses',
                     notes: formData.notes.trim(),
@@ -510,150 +511,195 @@ export default function NewTransaction() {
                                     placeholder="Catatan tambahan..."
                                 />
                             </div>
-                        </Card>
 
-                        {/* Actions */}
-                        <div className="flex gap-2">
-                            <Button
-                                type="submit"
-                                variant="primary"
-                                fullWidth
-                                loading={loading}
-                            >
-                                <Check size={20} />
-                                Proses
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="secondary"
-                                onClick={() => navigate('/')}
-                            >
-                                Batal
-                            </Button>
+                            {/* Paid Amount Section */}
+                            <div className="mt-4 pt-4 border-t border-slate-100 space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <p className="text-sm font-semibold text-slate-700">Jumlah Bayar Sekarang:</p>
+                                    <div className="flex gap-2">
+                                        <Button
+                                            type="button"
+                                            variant="secondary"
+                                            size="xs"
+                                            onClick={() => setFormData({ ...formData, paid_amount: total })}
+                                            className="text-[10px] px-2 h-7"
+                                        >
+                                            Lunas
+                                        </Button>
+                                        <Button
+                                            type="button"
+                                            variant="secondary"
+                                            size="xs"
+                                            onClick={() => setFormData({ ...formData, paid_amount: (total / 2) })}
+                                            className="text-[10px] px-2 h-7"
+                                        >
+                                            DP 50%
+                                        </Button>
+                                    </div>
+                                </div>
+                                <div className="relative">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold text-sm">Rp</span>
+                                    <input
+                                        type="number"
+                                        value={formData.paid_amount}
+                                        onChange={(e) => setFormData({ ...formData, paid_amount: e.target.value })}
+                                        placeholder={total.toString()}
+                                        className="w-full h-11 pl-10 pr-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent font-bold text-lg text-primary-600"
+                                    />
+                                </div>
+                                {formData.paid_amount < total && formData.paid_amount > 0 && (
+                                    <p className="text-xs text-amber-600 font-medium">
+                                        Kurang: {formatCurrency(total - (parseFloat(formData.paid_amount) || 0))} (Marked as Belum Lunas)
+                                    </p>
+                                )}
+                            </div>
                         </div>
-                    </form>
+                    </Card>
+
+                    {/* Actions */}
+                    <div className="flex gap-2">
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            fullWidth
+                            loading={loading}
+                        >
+                            <Check size={20} />
+                            Proses
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={() => navigate('/')}
+                        >
+                            Batal
+                        </Button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+            {/* Customer Selection Modal */ }
+    <Modal
+        isOpen={showCustomerModal}
+        onClose={() => setShowCustomerModal(false)}
+        title="Pilih Pelanggan"
+    >
+        <div className="space-y-4">
+            <Input
+                placeholder="Cari nama atau no HP..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="mb-2"
+            />
+            <div className="max-h-96 overflow-y-auto space-y-2">
+                {allCustomers
+                    .filter(c =>
+                        c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        c.phone.includes(searchQuery)
+                    )
+                    .map((customer) => (
+                        <button
+                            key={customer.id}
+                            type="button"
+                            onClick={() => selectCustomer(customer)}
+                            className="w-full text-left p-3 hover:bg-slate-50 border border-slate-100 rounded-xl transition-colors flex items-center gap-3"
+                        >
+                            <div className="w-10 h-10 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold">
+                                {customer.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                                <div className="font-semibold text-slate-900">{customer.name}</div>
+                                <div className="text-sm text-slate-500">{customer.phone}</div>
+                            </div>
+                        </button>
+                    ))}
+                {allCustomers.filter(c =>
+                    c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    c.phone.includes(searchQuery)
+                ).length === 0 && (
+                        <div className="text-center py-8 text-slate-500">
+                            Pelanggan tidak ditemukan.
+                            <br />
+                            <button
+                                className="text-primary-600 font-semibold mt-2 underline"
+                                onClick={() => {
+                                    setCustomerMode('add');
+                                    setShowCustomerModal(false);
+                                }}
+                            >
+                                Tambah sebagai pelanggan baru
+                            </button>
+                        </div>
+                    )}
+            </div>
+        </div>
+    </Modal>
+
+    {/* Success Modal */ }
+    <Modal
+        isOpen={showSuccessModal}
+        onClose={() => navigate('/transactions')}
+        title="Transaksi Berhasil"
+    >
+        <div className="space-y-4">
+            <p className="text-center text-slate-600">
+                Transaksi berhasil disimpan. Silakan pilih aksi selanjutnya.
+            </p>
+
+            <div className="bg-white border rounded-lg shadow-sm p-2 flex justify-center mb-4 overflow-hidden">
+                <div className="scale-75 origin-top -mb-16">
+                    <PrintReceipt
+                        transaction={createdTransaction}
+                        laundryInfo={laundryInfo}
+                        className="block bg-white text-slate-900 pointer-events-none"
+                    />
                 </div>
             </div>
 
-            {/* Customer Selection Modal */}
-            <Modal
-                isOpen={showCustomerModal}
-                onClose={() => setShowCustomerModal(false)}
-                title="Pilih Pelanggan"
+            <div className="grid grid-cols-2 gap-3">
+                <Button
+                    variant="secondary"
+                    onClick={handlePrint}
+                    className="bg-slate-100 text-slate-700 hover:bg-slate-200"
+                >
+                    <Printer size={20} />
+                    Print
+                </Button>
+                <Button
+                    variant="primary"
+                    onClick={handleWhatsApp}
+                    className="bg-green-600 hover:bg-green-700 text-white border-transparent"
+                    loading={loading}
+                >
+                    <WhatsappLogo size={20} />
+                    Lihat PDF (Share)
+                </Button>
+            </div>
+
+            <Button
+                variant="outline"
+                fullWidth
+                onClick={() => navigate('/transactions')}
             >
-                <div className="space-y-4">
-                    <Input
-                        placeholder="Cari nama atau no HP..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="mb-2"
+                Selesai / Tutup
+            </Button>
+        </div>
+    </Modal>
+    {/* Hidden Print Area - Only visible when printing/generating PDF */ }
+    {
+        createdTransaction && (
+            <div className="hidden print:block absolute top-0 left-0 w-full bg-white z-[9999]">
+                <div ref={receiptRef}>
+                    <PrintReceipt
+                        transaction={createdTransaction}
+                        laundryInfo={laundryInfo}
+                        className="print-content"
                     />
-                    <div className="max-h-96 overflow-y-auto space-y-2">
-                        {allCustomers
-                            .filter(c =>
-                                c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                                c.phone.includes(searchQuery)
-                            )
-                            .map((customer) => (
-                                <button
-                                    key={customer.id}
-                                    type="button"
-                                    onClick={() => selectCustomer(customer)}
-                                    className="w-full text-left p-3 hover:bg-slate-50 border border-slate-100 rounded-xl transition-colors flex items-center gap-3"
-                                >
-                                    <div className="w-10 h-10 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold">
-                                        {customer.name.charAt(0).toUpperCase()}
-                                    </div>
-                                    <div>
-                                        <div className="font-semibold text-slate-900">{customer.name}</div>
-                                        <div className="text-sm text-slate-500">{customer.phone}</div>
-                                    </div>
-                                </button>
-                            ))}
-                        {allCustomers.filter(c =>
-                            c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            c.phone.includes(searchQuery)
-                        ).length === 0 && (
-                                <div className="text-center py-8 text-slate-500">
-                                    Pelanggan tidak ditemukan.
-                                    <br />
-                                    <button
-                                        className="text-primary-600 font-semibold mt-2 underline"
-                                        onClick={() => {
-                                            setCustomerMode('add');
-                                            setShowCustomerModal(false);
-                                        }}
-                                    >
-                                        Tambah sebagai pelanggan baru
-                                    </button>
-                                </div>
-                            )}
-                    </div>
                 </div>
-            </Modal>
-
-            {/* Success Modal */}
-            <Modal
-                isOpen={showSuccessModal}
-                onClose={() => navigate('/transactions')}
-                title="Transaksi Berhasil"
-            >
-                <div className="space-y-4">
-                    <p className="text-center text-slate-600">
-                        Transaksi berhasil disimpan. Silakan pilih aksi selanjutnya.
-                    </p>
-
-                    <div className="bg-white border rounded-lg shadow-sm p-2 flex justify-center mb-4 overflow-hidden">
-                        <div className="scale-75 origin-top -mb-16">
-                            <PrintReceipt
-                                transaction={createdTransaction}
-                                laundryInfo={laundryInfo}
-                                className="block bg-white text-slate-900 pointer-events-none"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-3">
-                        <Button
-                            variant="secondary"
-                            onClick={handlePrint}
-                            className="bg-slate-100 text-slate-700 hover:bg-slate-200"
-                        >
-                            <Printer size={20} />
-                            Print
-                        </Button>
-                        <Button
-                            variant="primary"
-                            onClick={handleWhatsApp}
-                            className="bg-green-600 hover:bg-green-700 text-white border-transparent"
-                            loading={loading}
-                        >
-                            <WhatsappLogo size={20} />
-                            Lihat PDF (Share)
-                        </Button>
-                    </div>
-
-                    <Button
-                        variant="outline"
-                        fullWidth
-                        onClick={() => navigate('/transactions')}
-                    >
-                        Selesai / Tutup
-                    </Button>
-                </div>
-            </Modal>
-            {/* Hidden Print Area - Only visible when printing/generating PDF */}
-            {createdTransaction && (
-                <div className="hidden print:block absolute top-0 left-0 w-full bg-white z-[9999]">
-                    <div ref={receiptRef}>
-                        <PrintReceipt
-                            transaction={createdTransaction}
-                            laundryInfo={laundryInfo}
-                            className="print-content"
-                        />
-                    </div>
-                </div>
-            )}
+            </div>
+        )
+    }
         </div >
     );
 }

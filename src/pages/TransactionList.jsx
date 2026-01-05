@@ -26,6 +26,7 @@ export default function TransactionList() {
 
     // Filters State
     const [statusTab, setStatusTab] = useState('semua');
+    const [paymentStatusTab, setPaymentStatusTab] = useState('semua'); // 'semua' | 'lunas' | 'belum_lunas'
     const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
@@ -77,6 +78,11 @@ export default function TransactionList() {
         let filtered = [...transactions];
         if (statusTab !== 'semua') {
             filtered = filtered.filter(t => t.status === statusTab);
+        }
+        if (paymentStatusTab === 'lunas') {
+            filtered = filtered.filter(t => t.paid_amount >= t.total_amount);
+        } else if (paymentStatusTab === 'belum_lunas') {
+            filtered = filtered.filter(t => t.paid_amount < t.total_amount);
         }
         if (searchQuery.trim()) {
             const query = searchQuery.toLowerCase();
@@ -150,22 +156,52 @@ export default function TransactionList() {
                     <Card className="mb-4">
                         {/* Transaction Status Tabs (Only visible for Pemasukan) */}
                         {mainTab === 'pemasukan' && (
-                            <div className="flex gap-2 mb-3 overflow-x-auto pb-2">
-                                {transactionTabs.map((tab) => (
-                                    <button
-                                        key={tab.value}
-                                        onClick={() => setStatusTab(tab.value)}
-                                        className={`
-                                                px-4 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors
-                                                ${statusTab === tab.value
-                                                ? 'bg-primary-500 text-white'
-                                                : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                                            }
-                                            `}
-                                    >
-                                        {tab.label}
-                                    </button>
-                                ))}
+                            <div className="space-y-4 mb-4">
+                                <div>
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Status Pesanan</p>
+                                    <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                                        {transactionTabs.map((tab) => (
+                                            <button
+                                                key={tab.value}
+                                                onClick={() => setStatusTab(tab.value)}
+                                                className={`
+                                                    px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all
+                                                    ${statusTab === tab.value
+                                                        ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
+                                                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                                    }
+                                                `}
+                                            >
+                                                {tab.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="pt-2 border-t border-slate-50">
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Status Pembayaran</p>
+                                    <div className="flex gap-2">
+                                        {[
+                                            { value: 'semua', label: 'Semua' },
+                                            { value: 'lunas', label: 'Lunas' },
+                                            { value: 'belum_lunas', label: 'Belum Lunas' },
+                                        ].map((tab) => (
+                                            <button
+                                                key={tab.value}
+                                                onClick={() => setPaymentStatusTab(tab.value)}
+                                                className={`
+                                                    px-4 py-1.5 rounded-full text-xs font-semibold transition-all
+                                                    ${paymentStatusTab === tab.value
+                                                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-200'
+                                                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                                    }
+                                                `}
+                                            >
+                                                {tab.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
                             </div>
                         )}
 
@@ -216,6 +252,12 @@ export default function TransactionList() {
                                                                     </p>
                                                                     <Badge variant={transaction.status} className="scale-90 origin-left">
                                                                         {transaction.status}
+                                                                    </Badge>
+                                                                    <Badge
+                                                                        variant={transaction.paid_amount >= transaction.total_amount ? 'lunas' : 'belum_lunas'}
+                                                                        className="scale-90 origin-left"
+                                                                    >
+                                                                        {transaction.paid_amount >= transaction.total_amount ? 'LUNAS' : 'BELUM LUNAS'}
                                                                     </Badge>
                                                                     {transaction.payment_method && (
                                                                         <Badge variant={transaction.payment_method.toLowerCase()}>

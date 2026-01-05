@@ -24,6 +24,8 @@ export default function TransactionDetail() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const [showStatusModal, setShowStatusModal] = useState(false);
+    const [showPaymentModal, setShowPaymentModal] = useState(false);
+    const [isUpdatingPayment, setIsUpdatingPayment] = useState(false);
     const receiptRef = useRef(null);
 
     useEffect(() => {
@@ -86,6 +88,32 @@ export default function TransactionDetail() {
         } catch (error) {
             console.error('Error updating status:', error);
             alert('Gagal mengubah status');
+        }
+    };
+
+    const handlePaymentUpdate = async () => {
+        try {
+            setIsUpdatingPayment(true);
+            const remaining = transaction.total_amount - transaction.paid_amount;
+            const newPaidAmount = transaction.paid_amount + remaining;
+
+            const { data, error } = await supabase
+                .from('transactions')
+                .update({ paid_amount: newPaidAmount })
+                .eq('id', transaction.id)
+                .select()
+                .single();
+
+            if (error) throw error;
+
+            setTransaction({ ...transaction, paid_amount: newPaidAmount });
+            setShowPaymentModal(false);
+            alert('Pembayaran berhasil dilunasi');
+        } catch (error) {
+            console.error('Error updating payment:', error);
+            alert('Gagal melunasi pembayaran');
+        } finally {
+            setIsUpdatingPayment(false);
         }
     };
 
@@ -201,7 +229,19 @@ export default function TransactionDetail() {
 
                         {/* Payment */}
                         <Card>
-                            <h2 className="font-semibold text-slate-900 mb-3">Info Pembayaran</h2>
+                            <div className="flex items-center justify-between mb-3">
+                                <h2 className="font-semibold text-slate-900">Info Pembayaran</h2>
+                                {transaction.paid_amount < transaction.total_amount && (
+                                    <Button
+                                        variant="primary"
+                                        size="xs"
+                                        className="bg-emerald-600 hover:bg-emerald-700 text-[10px] h-7 px-3"
+                                        onClick={() => setShowPaymentModal(true)}
+                                    >
+                                        Bayar Sisa
+                                    </Button>
+                                )}
+                            </div>
                             <div className="space-y-2 text-sm">
                                 <div className="flex justify-between">
                                     <span className="text-slate-600">Total:</span>
@@ -322,24 +362,50 @@ export default function TransactionDetail() {
                         Yakin ingin menghapus transaksi <strong>{transaction.transaction_number}</strong>?
                         Tindakan ini tidak dapat dibatalkan.
                     </p>
-                    <div className="flex gap-2">
-                        <Button
-                            variant="destructive"
-                            fullWidth
-                            onClick={handleDelete}
-                        >
-                            Ya, Hapus
-                        </Button>
-                        <Button
-                            variant="secondary"
-                            fullWidth
-                            onClick={() => setShowDeleteModal(false)}
-                        >
-                            Batal
-                        </Button>
-                    </div>
                 </div>
-            </Modal>
+            </div>
+        </Modal >
+
+            {/* Payment Modal (Pelunasan) */ }
+            < Modal
+    isOpen = { showPaymentModal }
+    onClose = {() => setShowPaymentModal(false)
+}
+title = "Pelunasan Tagihan"
+size = "sm"
+    >
+    <div className="space-y-4">
+        <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+            <p className="text-xs text-emerald-600 font-bold uppercase tracking-wider mb-1">Sisa Tagihan</p>
+            <p className="text-2xl font-black text-emerald-700">
+                {formatCurrency(transaction.total_amount - transaction.paid_amount)}
+            </p>
+        </div>
+
+        <p className="text-sm text-slate-600">
+            Pastikan Anda sudah menerima pembayaran sejumlah sisa tagihan di atas. Transaksi akan otomatis ditandai sebagai <strong>Lunas</strong>.
+        </p>
+
+        <div className="flex gap-2">
+            <Button
+                variant="primary"
+                fullWidth
+                onClick={handlePaymentUpdate}
+                loading={isUpdatingPayment}
+                className="bg-emerald-600 hover:bg-emerald-700"
+            >
+                Konfirmasi Lunas
+            </Button>
+            <Button
+                variant="secondary"
+                fullWidth
+                onClick={() => setShowPaymentModal(false)}
+            >
+                Batal
+            </Button>
+        </div>
+    </div>
+            </Modal >
         </>
     );
 }
