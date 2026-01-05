@@ -61,63 +61,86 @@ export default function Dashboard() {
             <div className="flex-1 flex flex-col pb-16 md:pb-0">
                 <Header />
 
-                <Container className="flex-1 py-6 section-gap">
-                    {/* Welcome Message */}
-                    <div className="mb-6">
-                        <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
-                            Selamat Datang, {user?.profile?.full_name?.split(' ')[0] || 'Bosku'}! 👋
-                        </h1>
-                        <p className="text-slate-600 mt-1">
-                            Semoga harimu menyenangkan dan bisnis makin lancar.
-                        </p>
-                    </div>
+                <div className="relative">
+                    {/* Blue Hero Section */}
+                    <div className="bg-gradient-to-br from-blue-600 to-blue-800 text-white pt-8 pb-32 px-4 rounded-b-[40px] shadow-lg">
+                        <div className="max-w-4xl mx-auto">
+                            <div className="mb-6">
+                                <h1 className="text-2xl font-bold">
+                                    Selamat Datang, {user?.profile?.full_name?.split(' ')[0] || 'Bosku'}! 👋
+                                </h1>
+                                <p className="text-blue-100 text-sm mt-1">
+                                    Semoga harimu menyenangkan dan bisnis makin lancar.
+                                </p>
+                            </div>
 
-                    {/* Quick Stats */}
-                    <div className="grid grid-cols-3 gap-2 md:gap-4">
-                        <Card className="text-center p-3 md:p-4">
-                            <IconBox icon={ReceiptIcon} variant="secondary" size="sm" className="mx-auto mb-2" />
-                            <p className="text-xs text-slate-500 mb-1">Transaksi</p>
-                            <p className="text-lg md:text-xl font-bold text-slate-900">
-                                {stats.totalTransactions}
-                            </p>
-                        </Card>
-
-                        <Card className="text-center p-3 md:p-4">
-                            <IconBox icon={TrendUp} variant="secondary" size="sm" className="mx-auto mb-2" />
-                            <p className="text-xs text-slate-500 mb-1">Pendapatan</p>
-                            <p className="text-lg md:text-xl font-bold text-slate-900">
-                                {formatCurrency(stats.totalRevenue)}
-                            </p>
-                        </Card>
-
-                        <Card className="text-center p-3 md:p-4">
-                            <IconBox icon={Package} variant="secondary" size="sm" className="mx-auto mb-2" />
-                            <p className="text-xs text-slate-500 mb-1">Aktif</p>
-                            <p className="text-lg md:text-xl font-bold text-slate-900">
-                                {stats.activeOrders}
-                            </p>
-                        </Card>
-                    </div>
-
-                    {/* Quick Actions */}
-                    <div>
-                        <h2 className="text-lg font-semibold text-slate-900 mb-3">Aksi Cepat</h2>
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
-                            {quickActions.map((action) => (
-                                <Button
-                                    key={action.to}
-                                    variant={action.variant || 'secondary'}
-                                    onClick={() => navigate(action.to)}
-                                    className="h-auto py-4 flex-col"
-                                >
-                                    <action.icon size={24} className="mb-2" />
-                                    <span className="text-xs">{action.label}</span>
-                                </Button>
-                            ))}
+                            {/* Main KPI */}
+                            <div className="mt-8">
+                                <p className="text-blue-200 text-xs uppercase tracking-wider font-semibold mb-1">Pendapatan Bulan Ini</p>
+                                <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight">
+                                    {formatCurrency(stats.totalRevenue)}
+                                </h2>
+                            </div>
                         </div>
                     </div>
 
-                </Container>
+                    {/* Content Section (Overlapping) */}
+                    <Container className="-mt-24 pb-8 space-y-6">
+                        {/* Thematic Illustration */}
+                        <div className="max-w-4xl mx-auto">
+                            <Card className="overflow-hidden p-0 border-none shadow-xl">
+                                <img
+                                    src="/dashboard-banner.png"
+                                    alt="Professional Laundry Management"
+                                    className="w-full h-48 md:h-64 object-cover"
+                                />
+                            </Card>
+                        </div>
+
+                        {/* Menu Grid */}
+                        <div className="max-w-4xl mx-auto">
+                            <h2 className="text-lg font-bold text-slate-800 mb-4 px-2">Menu Utama</h2>
+                            <div className="grid grid-cols-4 gap-4 px-2">
+                                {quickActions.map((action) => (
+                                    <button
+                                        key={action.to}
+                                        onClick={() => navigate(action.to)}
+                                        className="flex flex-col items-center gap-2 group"
+                                    >
+                                        <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center transition-all duration-200 shadow-sm bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-active:scale-95">
+                                            <action.icon size={28} weight="fill" />
+                                        </div>
+                                        <span className="text-[10px] md:text-xs font-semibold text-slate-600 text-center leading-tight">
+                                            {action.label}
+                                        </span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Summary Cards (Quick Stats) */}
+                        <div className="max-w-4xl mx-auto grid grid-cols-2 gap-4">
+                            <Card className="p-4 flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center">
+                                    <ReceiptIcon size={20} weight="bold" />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] text-slate-500 font-bold uppercase">Transaksi</p>
+                                    <p className="text-lg font-extrabold text-slate-900">{stats.totalTransactions}</p>
+                                </div>
+                            </Card>
+                            <Card className="p-4 flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                                    <Package size={20} weight="bold" />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] text-slate-500 font-bold uppercase">Pesanan Aktif</p>
+                                    <p className="text-lg font-extrabold text-slate-900">{stats.activeOrders}</p>
+                                </div>
+                            </Card>
+                        </div>
+                    </Container>
+                </div>
             </div>
         </div>
     );

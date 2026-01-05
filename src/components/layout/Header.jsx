@@ -32,9 +32,9 @@ export default function Header() {
         <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
             <div className="container-padding">
                 <div className="flex items-center justify-between py-3">
-                    {/* Logo */}
+                    {/* Logo removed as requested */}
                     <div className="flex items-center gap-3">
-                        <img src="/logo.png" alt="Laundry New Mahkota" className="h-10 w-auto rounded-lg shadow-sm" />
+                        <h1 className="text-xl font-bold text-slate-900 md:hidden">Mahkota</h1>
                     </div>
 
                     {/* Right side: Date, User, Logout */}
