@@ -16,6 +16,7 @@ import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
 import PrintReceipt from '../components/print/PrintReceipt';
 import { useRef } from 'react';
+import { generateAndOpenPDF } from '../utils/pdfGenerator';
 
 export default function NewTransaction() {
     const navigate = useNavigate();
@@ -228,19 +229,21 @@ export default function NewTransaction() {
         }
     };
 
-    const handleWhatsApp = () => {
-        if (!createdTransaction) return;
+    const receiptRef = useRef(null);
 
-        const date = new Date(createdTransaction.date_in).toLocaleDateString('id-ID');
-        const itemsList = createdTransaction.transaction_items
-            .map(item => `- ${item.item_type.replace(/_/g, ' ')}: ${item.quantity} ${item.unit}`)
-            .join('%0A');
+    const handleWhatsApp = async () => {
+        if (!createdTransaction || !receiptRef.current) return;
 
-        const message = `Halo ${createdTransaction.customer_name},%0A%0ATerima kasih telah menggunakan jasa laundry kami.%0A%0ANo. Nota: *${createdTransaction.transaction_number}*%0ATanggal: ${date}%0A%0ARincian:%0A${itemsList}%0A%0ATotal: *${formatCurrency(createdTransaction.total_amount)}*%0AStatus: ${createdTransaction.status.toUpperCase()}%0A%0ASilakan simpan nota ini sebagai bukti pengambilan.%0ATerima kasih!`;
-
-        // Properly encode the message for URL
-        const encodedMessage = encodeURIComponent(message.replace(/%0A/g, '\n'));
-        window.open(`https://wa.me/${createdTransaction.customer_phone.replace(/^0/, '62').replace(/[^0-9]/g, '')}?text=${encodedMessage}`, '_blank');
+        try {
+            setLoading(true);
+            const filename = `Nota-${createdTransaction.transaction_number}.pdf`;
+            await generateAndOpenPDF(receiptRef.current, filename);
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            alert('Gagal membuka PDF');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handlePrint = () => {
@@ -605,9 +608,10 @@ export default function NewTransaction() {
                             variant="primary"
                             onClick={handleWhatsApp}
                             className="bg-green-600 hover:bg-green-700 text-white border-transparent"
+                            loading={loading}
                         >
                             <WhatsappLogo size={20} />
-                            Kirim WA
+                            Lihat PDF (Share)
                         </Button>
                     </div>
 
@@ -620,17 +624,18 @@ export default function NewTransaction() {
                     </Button>
                 </div>
             </Modal>
-            {/* Hidden Print Area - Only visible when printing */}
-            {
-                createdTransaction && (
-                    <div className="hidden print:block absolute top-0 left-0 w-full bg-white z-[9999]">
+            {/* Hidden Print Area - Only visible when printing/generating PDF */}
+            {createdTransaction && (
+                <div className="hidden print:block absolute top-0 left-0 w-full bg-white z-[9999]">
+                    <div ref={receiptRef}>
                         <PrintReceipt
                             transaction={createdTransaction}
                             className="print-content"
                         />
                     </div>
-                )
-            }
+                </div>
+            )}
         </div >
     );
 }
+

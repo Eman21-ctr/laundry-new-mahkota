@@ -12,6 +12,8 @@ import Badge from '../components/ui/Badge';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
 import PrintReceipt from '../components/print/PrintReceipt';
+import { useRef } from 'react';
+import { generateAndOpenPDF } from '../utils/pdfGenerator';
 
 export default function TransactionDetail() {
     const { id } = useParams();
@@ -20,7 +22,9 @@ export default function TransactionDetail() {
     const [laundryInfo, setLaundryInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showStatusModal, setShowStatusModal] = useState(false);
+    const receiptRef = useRef(null);
 
     useEffect(() => {
         loadTransaction();
@@ -57,6 +61,20 @@ export default function TransactionDetail() {
         setTimeout(() => {
             document.title = originalTitle;
         }, 500);
+    };
+
+    const handleShare = async () => {
+        if (!transaction || !receiptRef.current) return;
+        try {
+            setLoading(true);
+            const filename = `Nota-${transaction.transaction_number}.pdf`;
+            await generateAndOpenPDF(receiptRef.current, filename);
+        } catch (error) {
+            console.error('Error generating PDF:', error);
+            alert('Gagal membuka PDF');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleStatusChange = async (newStatus) => {
@@ -227,6 +245,14 @@ export default function TransactionDetail() {
                                 </Button>
                                 <Button
                                     variant="secondary"
+                                    onClick={handleShare}
+                                    className="bg-green-600 hover:bg-green-700 text-white border-transparent"
+                                >
+                                    <Printer size={20} />
+                                    Share PDF
+                                </Button>
+                                <Button
+                                    variant="secondary"
                                     onClick={() => setShowStatusModal(true)}
                                 >
                                     Ubah Status
@@ -253,7 +279,11 @@ export default function TransactionDetail() {
             </div>
 
             {/* Print Receipt */}
-            <PrintReceipt transaction={transaction} laundryInfo={laundryInfo} />
+            <div className="hidden print:block absolute top-0 left-0 w-full bg-white z-[9999]">
+                <div ref={receiptRef}>
+                    <PrintReceipt transaction={transaction} laundryInfo={laundryInfo} className="print-content" />
+                </div>
+            </div>
 
             {/* Status Modal */}
             <Modal
