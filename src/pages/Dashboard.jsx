@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Receipt as ReceiptIcon, ChartLine, Gear, Users, TrendUp, Package, Clock, Wallet } from 'phosphor-react';
+import { Plus, Receipt as ReceiptIcon, ChartLine, Gear, Users, TrendUp, Package, Wallet } from 'phosphor-react';
 import useAuth from '../hooks/useAuth';
-import { getTodayStats, getTransactions } from '../services/transactions';
-import { formatCurrency, formatDate, getRelativeTime } from '../utils/formatters';
+import { getTodayStats } from '../services/transactions';
+import { formatCurrency } from '../utils/formatters';
 import Header from '../components/layout/Header';
 import Navigation from '../components/layout/Navigation';
 import Container from '../components/layout/Container';
@@ -22,7 +22,6 @@ export default function Dashboard() {
         totalRevenue: 0,
         activeOrders: 0,
     });
-    const [recentTransactions, setRecentTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -34,9 +33,6 @@ export default function Dashboard() {
             setLoading(true);
             const todayStats = await getTodayStats();
             setStats(todayStats);
-
-            const recent = await getTransactions({ limit: 5 });
-            setRecentTransactions(recent);
         } catch (error) {
             console.error('Error loading dashboard:', error);
         } finally {
@@ -112,67 +108,6 @@ export default function Dashboard() {
                         </div>
                     </div>
 
-                    {/* Recent Transactions */}
-                    <div>
-                        <div className="flex items-center justify-between mb-3">
-                            <h2 className="text-lg font-semibold text-slate-900">Transaksi Terbaru</h2>
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => navigate('/transactions')}
-                            >
-                                Lihat Semua
-                            </Button>
-                        </div>
-
-                        {loading ? (
-                            <Card className="text-center py-8 text-slate-600">
-                                Memuat...
-                            </Card>
-                        ) : recentTransactions.length === 0 ? (
-                            <Card className="text-center py-8 text-slate-600">
-                                <Clock size={32} className="mx-auto mb-2 opacity-50" />
-                                <p>Belum ada transaksi hari ini</p>
-                            </Card>
-                        ) : (
-                            <div className="space-y-2">
-                                {recentTransactions.map((transaction) => (
-                                    <Card
-                                        key={transaction.id}
-                                        className="cursor-pointer hover:shadow-md transition-shadow"
-                                        onClick={() => navigate(`/transactions/${transaction.id}`)}
-                                    >
-                                        <div className="flex items-start justify-between gap-3">
-                                            <div className="flex-1 min-w-0">
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <p className="font-semibold text-slate-900 text-sm">
-                                                        {transaction.transaction_number}
-                                                    </p>
-                                                    <Badge variant={transaction.status}>
-                                                        {transaction.status}
-                                                    </Badge>
-                                                </div>
-                                                <p className="font-medium text-slate-700">
-                                                    {transaction.customer_name}
-                                                </p>
-                                                <p className="text-xs text-slate-500 mt-1">
-                                                    {getRelativeTime(transaction.created_at)}
-                                                </p>
-                                            </div>
-                                            <div className="text-right flex-shrink-0">
-                                                <p className="font-bold text-slate-900">
-                                                    {formatCurrency(transaction.total_amount)}
-                                                </p>
-                                                <p className="text-xs text-slate-500 mt-1">
-                                                    {transaction.transaction_items?.length || 0} item
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </Card>
-                                ))}
-                            </div>
-                        )}
-                    </div>
                 </Container>
             </div>
         </div>

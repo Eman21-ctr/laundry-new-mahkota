@@ -203,11 +203,11 @@ export default function TransactionList() {
                                                     <div className="space-y-2">
                                                         <div className="flex items-start justify-between gap-3">
                                                             <div className="flex-1 min-w-0">
-                                                                <div className="flex items-center gap-2 mb-1">
-                                                                    <p className="font-semibold text-slate-900 text-sm">
+                                                                <div className="flex items-center flex-wrap gap-2 mb-1">
+                                                                    <p className="font-semibold text-slate-900 text-xs">
                                                                         {transaction.transaction_number}
                                                                     </p>
-                                                                    <Badge variant={transaction.status}>
+                                                                    <Badge variant={transaction.status} className="scale-90 origin-left">
                                                                         {transaction.status}
                                                                     </Badge>
                                                                     {transaction.payment_method && (
