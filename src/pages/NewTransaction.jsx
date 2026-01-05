@@ -319,30 +319,7 @@ export default function NewTransaction() {
                             )}
                         </Card>
 
-                        {/* Payment Method */}
-                        <Card>
-                            <h2 className="font-semibold text-slate-900 mb-3">Metode Pembayaran</h2>
-                            <div className="grid grid-cols-3 gap-3">
-                                {[
-                                    { id: 'Tunai', icon: Money, label: 'Tunai' },
-                                    { id: 'QRIS', icon: QrCode, label: 'QRIS' },
-                                    { id: 'Transfer', icon: Bank, label: 'Transfer' },
-                                ].map((method) => (
-                                    <button
-                                        key={method.id}
-                                        type="button"
-                                        onClick={() => setFormData({ ...formData, payment_method: method.id })}
-                                        className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all duration-200 ${formData.payment_method === method.id
-                                                ? 'border-primary-500 bg-primary-50 text-primary-700 shadow-sm'
-                                                : 'border-slate-100 bg-slate-50 text-slate-500 hover:border-slate-200 hover:bg-white'
-                                            }`}
-                                    >
-                                        <method.icon size={28} weight={formData.payment_method === method.id ? "fill" : "regular"} />
-                                        <span className="text-xs font-semibold mt-2">{method.label}</span>
-                                    </button>
-                                ))}
-                            </div>
-                        </Card>
+
 
                         {/* Items */}
                         <Card>
@@ -431,6 +408,31 @@ export default function NewTransaction() {
                                 <div className="flex justify-between text-sm text-slate-600">
                                     <span>Estimasi Selesai:</span>
                                     <span>{estimatedDate.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                                </div>
+
+                                {/* Payment Method Integrated */}
+                                <div className="py-2">
+                                    <p className="text-sm font-semibold text-slate-700 mb-2">Pilih Metode Pembayaran:</p>
+                                    <div className="grid grid-cols-3 gap-2">
+                                        {[
+                                            { id: 'Tunai', icon: Money, label: 'Tunai' },
+                                            { id: 'QRIS', icon: QrCode, label: 'QRIS' },
+                                            { id: 'Transfer', icon: Bank, label: 'Transfer' },
+                                        ].map((method) => (
+                                            <button
+                                                key={method.id}
+                                                type="button"
+                                                onClick={() => setFormData({ ...formData, payment_method: method.id })}
+                                                className={`flex items-center justify-center gap-2 p-2 rounded-lg border transition-all duration-200 ${formData.payment_method === method.id
+                                                    ? 'border-primary-500 bg-primary-50 text-primary-700 font-semibold'
+                                                    : 'border-slate-200 bg-white text-slate-500 hover:bg-slate-50'
+                                                    }`}
+                                            >
+                                                <method.icon size={18} weight={formData.payment_method === method.id ? "fill" : "regular"} />
+                                                <span className="text-xs">{method.label}</span>
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
 
                                 <Input
