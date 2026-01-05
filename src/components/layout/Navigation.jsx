@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { House, Receipt, ChartLine, Gear, Users, Wallet } from 'phosphor-react';
+import { House, Receipt, ChartLine, Gear, Users } from 'phosphor-react';
 import useAuth from '../../hooks/useAuth';
 
 export default function Navigation() {
@@ -11,7 +11,6 @@ export default function Navigation() {
         { to: '/', label: 'Beranda', icon: House },
         { to: '/transactions', label: 'Transaksi', icon: Receipt },
         { to: '/reports', label: 'Laporan', icon: ChartLine },
-        { to: '/expenses', label: 'Pengeluaran', icon: Wallet },
         { to: '/settings', label: 'Pengaturan', icon: Gear },
     ];
 

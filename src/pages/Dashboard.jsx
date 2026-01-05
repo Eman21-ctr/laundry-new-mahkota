@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Receipt as ReceiptIcon, ChartLine, Gear, Users, TrendUp, Package, Clock } from 'phosphor-react';
+import { Plus, Receipt as ReceiptIcon, ChartLine, Gear, Users, TrendUp, Package, Clock, Wallet } from 'phosphor-react';
 import useAuth from '../hooks/useAuth';
 import { getTodayStats, getTransactions } from '../services/transactions';
 import { formatCurrency, formatDate, getRelativeTime } from '../utils/formatters';
@@ -46,6 +46,7 @@ export default function Dashboard() {
 
     const quickActions = [
         { label: 'Transaksi Baru', icon: Plus, to: '/new-transaction', variant: 'primary' },
+        { label: 'Catat Pengeluaran', icon: Wallet, to: '/record-expense', variant: 'danger' },
         { label: 'Lihat Transaksi', icon: ReceiptIcon, to: '/transactions' },
         { label: 'Laporan', icon: ChartLine, to: '/reports' },
         { label: 'Pengaturan', icon: Gear, to: '/settings' },

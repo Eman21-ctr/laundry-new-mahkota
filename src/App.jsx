@@ -13,7 +13,7 @@ import TransactionDetail from './pages/TransactionDetail';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import Users from './pages/Users';
-import Expenses from './pages/Expenses';
+import RecordExpense from './pages/RecordExpense';
 
 export default function App() {
     return (
@@ -66,10 +66,10 @@ export default function App() {
                         }
                     />
                     <Route
-                        path="/expenses"
+                        path="/record-expense"
                         element={
                             <ProtectedRoute>
-                                <Expenses />
+                                <RecordExpense />
                             </ProtectedRoute>
                         }
                     />
