@@ -25,7 +25,7 @@ export default function NewTransaction() {
         customer_phone: '',
         notes: '',
         payment_method: 'Tunai',
-        date_in: formatDateTimeLocal(new Date()),
+        date_in: new Date().toISOString().split('T')[0],
     });
     const [items, setItems] = useState([{
         item_type: '',
@@ -253,7 +253,7 @@ export default function NewTransaction() {
                                 <h2 className="font-semibold text-slate-900">Tanggal Transaksi</h2>
                                 <div className="w-full md:w-64">
                                     <Input
-                                        type="datetime-local"
+                                        type="date"
                                         value={formData.date_in}
                                         onChange={(e) => setFormData({ ...formData, date_in: e.target.value })}
                                         className="h-10"
