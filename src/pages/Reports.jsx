@@ -15,6 +15,8 @@ export default function Reports() {
         start: format(startOfMonth(new Date()), 'yyyy-MM-dd'),
         end: format(endOfMonth(new Date()), 'yyyy-MM-dd'),
     });
+    const [activeFilter, setActiveFilter] = useState('month'); // 'today', 'month', 'custom'
+
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -36,6 +38,7 @@ export default function Reports() {
             setStats({
                 ...transactionData,
                 totalExpenses: expenseData.totalExpenses,
+                totalExpenseCount: expenseData.count || 0,
                 netProfit: transactionData.totalRevenue - expenseData.totalExpenses,
                 expenseBreakdown: expenseData.categoryBreakdown
             });
@@ -52,6 +55,9 @@ export default function Reports() {
     }, [dateRange]);
 
     const handleQuickFilter = (type) => {
+        setActiveFilter(type);
+        if (type === 'custom') return;
+
         let start, end;
         const now = new Date();
 
@@ -59,16 +65,6 @@ export default function Reports() {
             case 'today':
                 start = startOfToday();
                 end = endOfToday();
-                break;
-            case 'yesterday':
-                start = startOfToday();
-                start = subDays(start, 1);
-                end = endOfToday();
-                end = subDays(end, 1);
-                break;
-            case 'week':
-                start = startOfWeek(now, { weekStartsOn: 1 });
-                end = endOfWeek(now, { weekStartsOn: 1 });
                 break;
             case 'month':
                 start = startOfMonth(now);
@@ -98,44 +94,57 @@ export default function Reports() {
                             <p className="text-slate-500 text-sm">Analisis pendapatan dan performa laundry</p>
                         </div>
 
-                        <div className="flex flex-wrap gap-2">
-                            <Button variant="secondary" size="sm" onClick={() => handleQuickFilter('today')}>Hari Ini</Button>
-                            <Button variant="secondary" size="sm" onClick={() => handleQuickFilter('week')}>Minggu Ini</Button>
-                            <Button variant="secondary" size="sm" onClick={() => handleQuickFilter('month')}>Bulan Ini</Button>
+                        <div className="bg-white p-1 rounded-lg border border-slate-200 inline-flex shadow-sm">
+                            {['today', 'month', 'custom'].map((type) => (
+                                <button
+                                    key={type}
+                                    onClick={() => handleQuickFilter(type)}
+                                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeFilter === type
+                                            ? 'bg-primary-500 text-white shadow-sm'
+                                            : 'text-slate-600 hover:bg-slate-50'
+                                        }`}
+                                >
+                                    {type === 'today' && 'Hari Ini'}
+                                    {type === 'month' && 'Bulan Ini'}
+                                    {type === 'custom' && 'Custom'}
+                                </button>
+                            ))}
                         </div>
                     </div>
 
-                    {/* Date Filters */}
-                    <div className="bg-white p-4 rounded-lg border border-slate-200 mb-6 flex flex-col sm:flex-row items-end gap-4 shadow-sm">
-                        <div className="flex-1 w-full sm:w-auto">
-                            <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Mulai Dari</label>
-                            <div className="relative">
-                                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                                <input
-                                    type="date"
-                                    className="w-full pl-10 pr-3 h-10 border border-slate-300 rounded-md text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                                    value={dateRange.start}
-                                    onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
-                                />
+                    {/* Date Filters (Only show if Custom) */}
+                    {activeFilter === 'custom' && (
+                        <div className="bg-white p-4 rounded-lg border border-slate-200 mb-6 flex flex-col sm:flex-row items-end gap-4 shadow-sm animate-fade-in">
+                            <div className="flex-1 w-full sm:w-auto">
+                                <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Mulai Dari</label>
+                                <div className="relative">
+                                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                    <input
+                                        type="date"
+                                        className="w-full pl-10 pr-3 h-10 border border-slate-300 rounded-md text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                        value={dateRange.start}
+                                        onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div className="flex-1 w-full sm:w-auto">
-                            <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Sampai Dengan</label>
-                            <div className="relative">
-                                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                                <input
-                                    type="date"
-                                    className="w-full pl-10 pr-3 h-10 border border-slate-300 rounded-md text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                                    value={dateRange.end}
-                                    onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
-                                />
+                            <div className="flex-1 w-full sm:w-auto">
+                                <label className="block text-xs font-semibold text-slate-500 uppercase mb-1">Sampai Dengan</label>
+                                <div className="relative">
+                                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                                    <input
+                                        type="date"
+                                        className="w-full pl-10 pr-3 h-10 border border-slate-300 rounded-md text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                        value={dateRange.end}
+                                        onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
+                                    />
+                                </div>
                             </div>
+                            <Button variant="primary" onClick={fetchReport} loading={loading} className="w-full sm:w-auto">
+                                <Funnel size={18} weight="bold" />
+                                Filter
+                            </Button>
                         </div>
-                        <Button variant="primary" onClick={fetchReport} loading={loading} className="w-full sm:w-auto">
-                            <Funnel size={18} weight="bold" />
-                            Filter
-                        </Button>
-                    </div>
+                    )}
 
                     {loading ? (
                         <div className="flex justify-center py-12">

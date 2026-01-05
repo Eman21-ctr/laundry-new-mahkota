@@ -251,49 +251,45 @@ export default function TransactionList() {
                                             {searchQuery ? 'Tidak ada pengeluaran yang cocok' : 'Belum ada pengeluaran dicatat'}
                                         </Card>
                                     ) : (
-                                        <div className="bg-white rounded-lg border border-slate-200 overflow-hidden shadow-sm">
-                                            <div className="overflow-x-auto">
-                                                <table className="w-full text-sm text-left">
-                                                    <thead className="bg-slate-50 text-slate-600 border-b border-slate-200">
-                                                        <tr>
-                                                            <th className="px-4 py-3 font-semibold">Tanggal</th>
-                                                            <th className="px-4 py-3 font-semibold">Kategori</th>
-                                                            <th className="px-4 py-3 font-semibold">Keterangan</th>
-                                                            <th className="px-4 py-3 font-semibold text-right">Jumlah</th>
-                                                            <th className="px-4 py-3 font-semibold text-center">Aksi</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody className="divide-y divide-slate-100">
-                                                        {filteredExpenses.map((expense) => (
-                                                            <tr key={expense.id} className="hover:bg-slate-50">
-                                                                <td className="px-4 py-3 text-slate-600 whitespace-nowrap">
-                                                                    {format(new Date(expense.date), 'dd MMM yyyy')}
-                                                                </td>
-                                                                <td className="px-4 py-3">
-                                                                    <span className="inline-block px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
+                                        <div className="space-y-2">
+                                            {filteredExpenses.map((expense) => (
+                                                <Card
+                                                    key={expense.id}
+                                                    className="hover:shadow-md transition-shadow"
+                                                >
+                                                    <div className="space-y-2">
+                                                        <div className="flex items-start justify-between gap-3">
+                                                            <div className="flex-1 min-w-0">
+                                                                <div className="flex items-center gap-2 mb-1">
+                                                                    <p className="text-xs text-slate-500">
+                                                                        {format(new Date(expense.date), 'dd MMM yyyy')}
+                                                                    </p>
+                                                                    <Badge variant="secondary" className="text-xs">
                                                                         {expense.category}
-                                                                    </span>
-                                                                </td>
-                                                                <td className="px-4 py-3 text-slate-900 max-w-xs truncate">
+                                                                    </Badge>
+                                                                </div>
+                                                                <p className="font-medium text-slate-900 break-words">
                                                                     {expense.description || '-'}
-                                                                </td>
-                                                                <td className="px-4 py-3 text-right font-medium text-slate-900">
+                                                                </p>
+                                                            </div>
+                                                            <div className="text-right flex-shrink-0">
+                                                                <p className="font-bold text-slate-900">
                                                                     {formatCurrency(expense.amount)}
-                                                                </td>
-                                                                <td className="px-4 py-3 text-center">
-                                                                    <button
-                                                                        onClick={() => handleDeleteExpense(expense.id)}
-                                                                        className="p-1 text-slate-400 hover:text-red-600 transition-colors"
-                                                                        title="Hapus"
-                                                                    >
-                                                                        <Trash size={18} />
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="flex items-center justify-end pt-2 border-t border-slate-100">
+                                                            <button
+                                                                onClick={() => handleDeleteExpense(expense.id)}
+                                                                className="text-slate-400 hover:text-red-600 transition-colors p-1"
+                                                            >
+                                                                <Trash size={18} />
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </Card>
+                                            ))}
                                         </div>
                                     )}
                                 </>
