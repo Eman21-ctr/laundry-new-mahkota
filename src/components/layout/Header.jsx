@@ -1,12 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SignOut, User, CalendarBlank } from 'phosphor-react';
+import { Power, CalendarBlank } from 'phosphor-react';
 import useAuth from '../../hooks/useAuth';
-import { formatDate } from '../../utils/formatters';
-import IconBox from '../ui/IconBox';
 import Button from '../ui/Button';
 
-export default function Header() {
+export default function Header({ transparent = false }) {
     const { user, signOut } = useAuth();
     const navigate = useNavigate();
 
@@ -17,60 +15,35 @@ export default function Header() {
         }
     };
 
-    // Get user initials
-    const getInitials = (name) => {
-        if (!name) return 'U';
-        return name
-            .split(' ')
-            .map(word => word[0])
-            .join('')
-            .toUpperCase()
-            .slice(0, 2);
-    };
-
     return (
-        <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
+        <header className={`${transparent ? 'bg-transparent border-none' : 'bg-white border-b border-slate-200'} sticky top-0 z-40 transition-all duration-300`}>
             <div className="container-padding">
-                <div className="flex items-center justify-between py-3">
-                    {/* Logo removed as requested */}
-                    <div className="flex items-center gap-3">
-                        <h1 className="text-xl font-bold text-slate-900 md:hidden">Mahkota</h1>
-                    </div>
+                <div className="flex items-center justify-between py-4">
+                    {/* Branding removed for world-class look */}
+                    <div />
 
-                    {/* Right side: Date, User, Logout */}
-                    <div className="flex items-center gap-2 md:gap-4">
-                        {/* Date - hidden on mobile */}
-                        <div className="hidden md:flex items-center gap-2 text-sm text-slate-600">
-                            <CalendarBlank size={16} />
-                            <span>{formatDate(new Date(), 'long')}</span>
+                    {/* Right side: Logout Only (Minimalist) */}
+                    <div className="flex items-center gap-4">
+                        <div className={`hidden sm:block text-right ${transparent ? 'text-white' : 'text-slate-900'}`}>
+                            <p className="text-xs font-bold uppercase tracking-wider opacity-80">
+                                {user?.profile?.full_name || 'Staff'}
+                            </p>
+                            <p className="text-[10px] opacity-60">
+                                {user?.profile?.is_owner ? 'Owner' : 'Kasir'}
+                            </p>
                         </div>
 
-                        {/* User Info */}
-                        <div className="flex items-center gap-2">
-                            <div className="hidden sm:block text-right">
-                                <p className="text-sm font-medium text-slate-900">
-                                    {user?.profile?.full_name || 'User'}
-                                </p>
-                                <p className="text-xs text-slate-500">
-                                    {user?.profile?.is_owner ? 'Owner' : 'Kasir'}
-                                </p>
-                            </div>
-                            <div className="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center font-semibold text-sm">
-                                {getInitials(user?.profile?.full_name)}
-                            </div>
-                        </div>
-
-                        {/* Logout Button */}
-                        <Button
-                            variant="ghost"
-                            size="sm"
+                        {/* Logout Button - Enhanced Power Icon */}
+                        <button
                             onClick={handleLogout}
-                            className="!px-2"
+                            className={`p-2 rounded-xl transition-all duration-200 ${transparent
+                                    ? 'bg-white/10 text-white hover:bg-white/20'
+                                    : 'bg-slate-100 text-slate-600 hover:bg-red-50 hover:text-red-500'
+                                }`}
                             title="Keluar"
                         >
-                            <SignOut size={20} />
-                            <span className="hidden md:inline">Keluar</span>
-                        </Button>
+                            <Power size={22} weight="bold" />
+                        </button>
                     </div>
                 </div>
             </div>

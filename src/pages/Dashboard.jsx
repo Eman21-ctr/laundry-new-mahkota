@@ -41,15 +41,18 @@ export default function Dashboard() {
     };
 
     const quickActions = [
-        { label: 'Transaksi Baru', icon: Plus, to: '/new-transaction', variant: 'primary' },
-        { label: 'Catat Pengeluaran', icon: Wallet, to: '/record-expense', variant: 'danger' },
+        { label: 'Transaksi Baru', icon: Plus, to: '/new-transaction' },
         { label: 'Daftar Transaksi', icon: ReceiptIcon, to: '/transactions' },
+        { label: 'Catat Pengeluaran', icon: Wallet, to: '/record-expense' },
         { label: 'Laporan', icon: ChartLine, to: '/reports' },
     ];
 
-    // Add Pengguna/Pengaturan action for owner only
+    // Add Owner-specific actions
     if (isOwner) {
-        quickActions.push({ label: 'Pengguna', icon: Users, to: '/users' });
+        quickActions.push(
+            { label: 'Kelola Staff', icon: Users, to: '/users' },
+            { label: 'Pengaturan', icon: Gear, to: '/users' } // Both link to the same page which has tabs
+        );
     }
 
     return (
@@ -59,15 +62,15 @@ export default function Dashboard() {
 
             {/* Main Content */}
             <div className="flex-1 flex flex-col pb-16 md:pb-0">
-                <Header />
-
                 <div className="relative">
-                    {/* Blue Hero Section */}
-                    <div className="bg-gradient-to-br from-blue-600 to-blue-800 text-white pt-8 pb-32 px-4 rounded-b-[40px] shadow-lg">
-                        <div className="max-w-4xl mx-auto">
+                    {/* Blue Hero Section (Full Bleed) */}
+                    <div className="bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-b-[40px] shadow-lg overflow-hidden">
+                        <Header transparent />
+
+                        <div className="max-w-4xl mx-auto px-6 pb-24 pt-4">
                             <div className="mb-6">
                                 <h1 className="text-2xl font-bold">
-                                    Selamat Datang, {user?.profile?.full_name?.split(' ')[0] || 'Bosku'}! 👋
+                                    Selamat Datang, {user?.profile?.full_name?.split(' ')[0] || 'Bosku'}!
                                 </h1>
                                 <p className="text-blue-100 text-sm mt-1">
                                     Semoga harimu menyenangkan dan bisnis makin lancar.
@@ -85,10 +88,10 @@ export default function Dashboard() {
                     </div>
 
                     {/* Content Section (Overlapping) */}
-                    <Container className="-mt-24 pb-8 space-y-6">
+                    <Container className="-mt-16 pb-8 space-y-6">
                         {/* Thematic Illustration */}
                         <div className="max-w-4xl mx-auto">
-                            <Card className="overflow-hidden p-0 border-none shadow-xl">
+                            <Card className="overflow-hidden p-0 border-none shadow-xl rounded-[32px]">
                                 <img
                                     src="/dashboard-banner.png"
                                     alt="Professional Laundry Management"
@@ -97,10 +100,9 @@ export default function Dashboard() {
                             </Card>
                         </div>
 
-                        {/* Menu Grid */}
+                        {/* Menu Grid - Standardized & Proportional */}
                         <div className="max-w-4xl mx-auto">
-                            <h2 className="text-lg font-bold text-slate-800 mb-4 px-2">Menu Utama</h2>
-                            <div className="grid grid-cols-4 gap-4 px-2">
+                            <div className="grid grid-cols-3 gap-y-8 gap-x-2 px-6 py-4">
                                 {quickActions.map((action) => (
                                     <button
                                         key={action.to}
@@ -110,7 +112,7 @@ export default function Dashboard() {
                                         <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center transition-all duration-200 shadow-sm bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-active:scale-95">
                                             <action.icon size={28} weight="fill" />
                                         </div>
-                                        <span className="text-[10px] md:text-xs font-semibold text-slate-600 text-center leading-tight">
+                                        <span className="text-[10px] md:text-xs font-bold text-slate-600 text-center leading-tight">
                                             {action.label}
                                         </span>
                                     </button>
@@ -120,22 +122,22 @@ export default function Dashboard() {
 
                         {/* Summary Cards (Quick Stats) */}
                         <div className="max-w-4xl mx-auto grid grid-cols-2 gap-4">
-                            <Card className="p-4 flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center">
-                                    <ReceiptIcon size={20} weight="bold" />
+                            <Card className="p-5 flex items-center gap-4 rounded-3xl">
+                                <div className="w-12 h-12 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center">
+                                    <ReceiptIcon size={24} weight="bold" />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] text-slate-500 font-bold uppercase">Transaksi</p>
-                                    <p className="text-lg font-extrabold text-slate-900">{stats.totalTransactions}</p>
+                                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Transaksi</p>
+                                    <p className="text-xl font-extrabold text-slate-900">{stats.totalTransactions}</p>
                                 </div>
                             </Card>
-                            <Card className="p-4 flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
-                                    <Package size={20} weight="bold" />
+                            <Card className="p-5 flex items-center gap-4 rounded-3xl">
+                                <div className="w-12 h-12 rounded-2xl bg-green-100 text-green-600 flex items-center justify-center">
+                                    <Package size={24} weight="bold" />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] text-slate-500 font-bold uppercase">Pesanan Aktif</p>
-                                    <p className="text-lg font-extrabold text-slate-900">{stats.activeOrders}</p>
+                                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Aktif</p>
+                                    <p className="text-xl font-extrabold text-slate-900">{stats.activeOrders}</p>
                                 </div>
                             </Card>
                         </div>
