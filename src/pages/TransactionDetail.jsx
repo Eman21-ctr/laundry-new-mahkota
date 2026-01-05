@@ -137,7 +137,7 @@ export default function TransactionDetail() {
                             <h1 className="text-2xl font-bold text-slate-900">Detail Transaksi</h1>
                         </div>
 
-                        <div className="max-w-2xl space-y-4">
+                        <div className="max-w-4xl mx-auto space-y-4">
                             {/* Header Info */}
                             <Card>
                                 <div className="flex items-start justify-between">

@@ -292,7 +292,7 @@ export default function NewTransaction() {
                         <h1 className="text-2xl font-bold text-slate-900">Transaksi Baru</h1>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-4 max-w-2xl">
+                    <form onSubmit={handleSubmit} className="space-y-4 max-w-4xl mx-auto">
                         {/* Transaction Date */}
                         <Card>
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">

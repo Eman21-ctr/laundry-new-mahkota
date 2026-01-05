@@ -119,7 +119,7 @@ export default function TransactionList() {
                 <Header />
 
                 <Container className="flex-1 py-4">
-                    <div className="max-w-2xl mx-auto">
+                    <div className="max-w-4xl mx-auto">
                         <h1 className="text-2xl font-bold text-slate-900 mb-4">Daftar Transaksi</h1>
 
                         {/* Main Tabs (Pemasukan / Pengeluaran) */}
