@@ -25,6 +25,7 @@ export default function NewTransaction() {
         customer_phone: '',
         notes: '',
         payment_method: 'Tunai',
+        date_in: formatDateTimeLocal(new Date()),
     });
     const [items, setItems] = useState([{
         item_type: '',
@@ -145,7 +146,7 @@ export default function NewTransaction() {
             }
         });
 
-        const estimatedDate = new Date();
+        const estimatedDate = new Date(formData.date_in);
         estimatedDate.setDate(estimatedDate.getDate() + (maxDuration || 3));
         return estimatedDate;
     };
@@ -204,7 +205,7 @@ export default function NewTransaction() {
                     payment_method: formData.payment_method,
                     status: 'proses',
                     notes: formData.notes.trim(),
-                    date_in: new Date().toISOString(),
+                    date_in: new Date(formData.date_in).toISOString(),
                     date_out: estimatedDate.toISOString(),
                     created_by: user.id,
                 },
@@ -246,6 +247,21 @@ export default function NewTransaction() {
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-4 max-w-2xl">
+                        {/* Transaction Date */}
+                        <Card>
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                                <h2 className="font-semibold text-slate-900">Tanggal Transaksi</h2>
+                                <div className="w-full md:w-64">
+                                    <Input
+                                        type="datetime-local"
+                                        value={formData.date_in}
+                                        onChange={(e) => setFormData({ ...formData, date_in: e.target.value })}
+                                        className="h-10"
+                                    />
+                                </div>
+                            </div>
+                        </Card>
+
                         {/* Customer Data */}
                         <Card>
                             <div className="flex items-center justify-between mb-4">
