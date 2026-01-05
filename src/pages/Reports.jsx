@@ -20,9 +20,16 @@ export default function Reports() {
     const fetchReport = async () => {
         setLoading(true);
         try {
+            // Use start of the start day and end of the end day
+            const startStr = new Date(dateRange.start);
+            startStr.setHours(0, 0, 0, 0);
+
+            const endStr = new Date(dateRange.end);
+            endStr.setHours(23, 59, 59, 999);
+
             const data = await getReportStats(
-                new Date(dateRange.start).toISOString(),
-                new Date(dateRange.end).toISOString()
+                startStr.toISOString(),
+                endStr.toISOString()
             );
             setStats(data);
         } catch (error) {
@@ -86,6 +93,7 @@ export default function Reports() {
 
                         <div className="flex flex-wrap gap-2">
                             <Button variant="secondary" size="sm" onClick={() => handleQuickFilter('today')}>Hari Ini</Button>
+                            <Button variant="secondary" size="sm" onClick={() => handleQuickFilter('yesterday')}>Kemarin</Button>
                             <Button variant="secondary" size="sm" onClick={() => handleQuickFilter('week')}>Minggu Ini</Button>
                             <Button variant="secondary" size="sm" onClick={() => handleQuickFilter('month')}>Bulan Ini</Button>
                         </div>
