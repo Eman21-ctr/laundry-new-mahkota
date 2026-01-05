@@ -362,50 +362,64 @@ export default function TransactionDetail() {
                         Yakin ingin menghapus transaksi <strong>{transaction.transaction_number}</strong>?
                         Tindakan ini tidak dapat dibatalkan.
                     </p>
+                    <div className="flex gap-2">
+                        <Button
+                            variant="destructive"
+                            fullWidth
+                            onClick={handleDelete}
+                        >
+                            Ya, Hapus
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            fullWidth
+                            onClick={() => setShowDeleteModal(false)}
+                        >
+                            Batal
+                        </Button>
+                    </div>
                 </div>
-            </div>
-        </Modal >
+            </Modal>
 
-            {/* Payment Modal (Pelunasan) */ }
-            < Modal
-    isOpen = { showPaymentModal }
-    onClose = {() => setShowPaymentModal(false)
-}
-title = "Pelunasan Tagihan"
-size = "sm"
-    >
-    <div className="space-y-4">
-        <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-            <p className="text-xs text-emerald-600 font-bold uppercase tracking-wider mb-1">Sisa Tagihan</p>
-            <p className="text-2xl font-black text-emerald-700">
-                {formatCurrency(transaction.total_amount - transaction.paid_amount)}
-            </p>
-        </div>
-
-        <p className="text-sm text-slate-600">
-            Pastikan Anda sudah menerima pembayaran sejumlah sisa tagihan di atas. Transaksi akan otomatis ditandai sebagai <strong>Lunas</strong>.
-        </p>
-
-        <div className="flex gap-2">
-            <Button
-                variant="primary"
-                fullWidth
-                onClick={handlePaymentUpdate}
-                loading={isUpdatingPayment}
-                className="bg-emerald-600 hover:bg-emerald-700"
+            {/* Payment Modal (Pelunasan) */}
+            <Modal
+                isOpen={showPaymentModal}
+                onClose={() => setShowPaymentModal(false)}
+                title="Pelunasan Tagihan"
+                size="sm"
             >
-                Konfirmasi Lunas
-            </Button>
-            <Button
-                variant="secondary"
-                fullWidth
-                onClick={() => setShowPaymentModal(false)}
-            >
-                Batal
-            </Button>
-        </div>
-    </div>
-            </Modal >
+                <div className="space-y-4">
+                    <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                        <p className="text-xs text-emerald-600 font-bold uppercase tracking-wider mb-1">Sisa Tagihan</p>
+                        <p className="text-2xl font-black text-emerald-700">
+                            {formatCurrency(transaction.total_amount - transaction.paid_amount)}
+                        </p>
+                    </div>
+
+                    <p className="text-sm text-slate-600">
+                        Pastikan Anda sudah menerima pembayaran sejumlah sisa tagihan di atas. Transaksi akan otomatis ditandai sebagai <strong>Lunas</strong>.
+                    </p>
+
+                    <div className="flex gap-2">
+                        <Button
+                            variant="primary"
+                            fullWidth
+                            onClick={handlePaymentUpdate}
+                            loading={isUpdatingPayment}
+                            className="bg-emerald-600 hover:bg-emerald-700"
+                        >
+                            Konfirmasi Lunas
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            fullWidth
+                            onClick={() => setShowPaymentModal(false)}
+                        >
+                            Batal
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
         </>
     );
 }
