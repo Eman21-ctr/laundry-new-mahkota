@@ -50,8 +50,8 @@ export default function Dashboard() {
     // Add Owner-specific actions
     if (isOwner) {
         quickActions.push(
-            { label: 'Kelola Staff', icon: Users, to: '/users' },
-            { label: 'Pengaturan', icon: Gear, to: '/users' } // Both link to the same page which has tabs
+            { label: 'Kelola Staff', icon: Users, to: '/users?tab=users' },
+            { label: 'Pengaturan', icon: Gear, to: '/users?tab=settings' }
         );
     }
 
@@ -72,9 +72,10 @@ export default function Dashboard() {
                                 <h1 className="text-2xl font-bold">
                                     Selamat Datang, {user?.profile?.full_name?.split(' ')[0] || 'Bosku'}!
                                 </h1>
-                                <p className="text-blue-100 text-sm mt-1">
-                                    Semoga harimu menyenangkan dan bisnis makin lancar.
-                                </p>
+                                <div className="text-blue-100 text-sm mt-1 leading-relaxed">
+                                    <p>Semoga harimu menyenangkan</p>
+                                    <p>dan bisnis makin lancar.</p>
+                                </div>
                             </div>
 
                             {/* Main KPI */}

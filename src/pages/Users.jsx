@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import Navigation from '../components/layout/Navigation';
 import Container from '../components/layout/Container';
@@ -13,12 +14,17 @@ import { getAppSettings, getPriceSettings } from '../services/settings';
 import { Plus, Users as UsersIcon, Storefront } from 'phosphor-react';
 
 export default function Users() {
+    const location = useLocation();
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [actionLoading, setActionLoading] = useState(false);
-    const [activeTab, setActiveTab] = useState('settings'); // Default to settings/toko
+
+    // Check URL params for active tab
+    const queryParams = new URLSearchParams(location.search);
+    const initialTab = queryParams.get('tab') || 'settings';
+    const [activeTab, setActiveTab] = useState(initialTab);
 
     // Settings state
     const [appSettings, setAppSettings] = useState(null);
