@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus, Trash, Printer, UserPlus, Users as UsersIcon, Bank, QrCode, Wallet, Money, WhatsappLogo, Check } from 'phosphor-react';
 import useAuth from '../hooks/useAuth';
-import { getPriceSettings } from '../services/settings';
+import { getPriceSettings, getAppSettings } from '../services/settings';
 import { searchCustomers, createOrGetCustomer, getCustomers } from '../services/customers';
 import { createTransaction } from '../services/transactions';
 import { formatCurrency, formatDateTimeLocal, parseDateTimeLocal } from '../utils/formatters';
@@ -47,11 +47,22 @@ export default function NewTransaction() {
     const [loading, setLoading] = useState(false);
     const [createdTransaction, setCreatedTransaction] = useState(null);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [laundryInfo, setLaundryInfo] = useState(null);
 
     useEffect(() => {
         loadPriceSettings();
         loadCustomers();
+        loadLaundryInfo();
     }, []);
+
+    const loadLaundryInfo = async () => {
+        try {
+            const settings = await getAppSettings();
+            setLaundryInfo(settings);
+        } catch (error) {
+            console.error('Error loading laundry info:', error);
+        }
+    };
 
     const loadCustomers = async () => {
         try {
@@ -590,6 +601,7 @@ export default function NewTransaction() {
                         <div className="scale-75 origin-top -mb-16">
                             <PrintReceipt
                                 transaction={createdTransaction}
+                                laundryInfo={laundryInfo}
                                 className="block bg-white text-slate-900 pointer-events-none"
                             />
                         </div>
@@ -630,6 +642,7 @@ export default function NewTransaction() {
                     <div ref={receiptRef}>
                         <PrintReceipt
                             transaction={createdTransaction}
+                            laundryInfo={laundryInfo}
                             className="print-content"
                         />
                     </div>
