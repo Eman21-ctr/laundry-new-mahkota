@@ -93,7 +93,6 @@ export default function Reports() {
 
                         <div className="flex flex-wrap gap-2">
                             <Button variant="secondary" size="sm" onClick={() => handleQuickFilter('today')}>Hari Ini</Button>
-                            <Button variant="secondary" size="sm" onClick={() => handleQuickFilter('yesterday')}>Kemarin</Button>
                             <Button variant="secondary" size="sm" onClick={() => handleQuickFilter('week')}>Minggu Ini</Button>
                             <Button variant="secondary" size="sm" onClick={() => handleQuickFilter('month')}>Bulan Ini</Button>
                         </div>
