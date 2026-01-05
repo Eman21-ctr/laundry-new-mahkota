@@ -1,11 +1,11 @@
 import React from 'react';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 
-export default function PrintReceipt({ transaction, laundryInfo, ref }) {
+const PrintReceipt = React.forwardRef(({ transaction, laundryInfo, className }, ref) => {
     if (!transaction) return null;
 
     return (
-        <div ref={ref} className="hidden print:block">
+        <div ref={ref} className={`print-content ${className || 'hidden print:block'}`}>
             <div className="p-4" style={{ width: '58mm', fontFamily: 'monospace', fontSize: '12px' }}>
                 {/* Header */}
                 <div className="text-center mb-3">
@@ -93,4 +93,6 @@ export default function PrintReceipt({ transaction, laundryInfo, ref }) {
             </div>
         </div>
     );
-}
+});
+
+export default PrintReceipt;

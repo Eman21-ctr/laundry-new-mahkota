@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Trash, Printer, UserPlus, Users as UsersIcon, Bank, QrCode, Wallet, Money } from 'phosphor-react';
+import { ArrowLeft, Plus, Trash, Printer, UserPlus, Users as UsersIcon, Bank, QrCode, Wallet, Money, WhatsappLogo, Check } from 'phosphor-react';
 import useAuth from '../hooks/useAuth';
 import { getPriceSettings } from '../services/settings';
 import { searchCustomers, createOrGetCustomer, getCustomers } from '../services/customers';
@@ -14,6 +14,7 @@ import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
+import PrintReceipt from '../components/print/PrintReceipt';
 
 export default function NewTransaction() {
     const navigate = useNavigate();
@@ -42,6 +43,8 @@ export default function NewTransaction() {
     const [searchQuery, setSearchQuery] = useState('');
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+    const [createdTransaction, setCreatedTransaction] = useState(null);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     useEffect(() => {
         loadPriceSettings();
@@ -212,9 +215,9 @@ export default function NewTransaction() {
                 validItems
             );
 
-            // Redirect to transaction detail or open print
-            alert('Transaksi berhasil dibuat!');
-            navigate('/transactions');
+            // Open success modal
+            setCreatedTransaction(transaction);
+            setShowSuccessModal(true);
 
         } catch (error) {
             console.error('Error creating transaction:', error);
@@ -222,6 +225,23 @@ export default function NewTransaction() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleWhatsApp = () => {
+        if (!createdTransaction) return;
+
+        const date = new Date(createdTransaction.date_in).toLocaleDateString('id-ID');
+        const itemsList = createdTransaction.transaction_items
+            .map(item => `- ${item.item_type.replace(/_/g, ' ')}: ${item.quantity} ${item.unit}`)
+            .join('%0A');
+
+        const message = `Halo ${createdTransaction.customer_name},%0A%0ATerima kasih telah menggunakan jasa laundry kami.%0A%0ANo. Nota: *${createdTransaction.transaction_number}*%0ATanggal: ${date}%0A%0ARincian:%0A${itemsList}%0A%0ATotal: *${formatCurrency(createdTransaction.total_amount)}*%0AStatus: ${createdTransaction.status.toUpperCase()}%0A%0ASilakan simpan nota ini sebagai bukti pengambilan.%0ATerima kasih!`;
+
+        window.open(`https://wa.me/${createdTransaction.customer_phone.replace(/^0/, '62').replace(/[^0-9]/g, '')}?text=${message}`, '_blank');
+    };
+
+    const handlePrint = () => {
+        window.print();
     };
 
     const total = calculateTotal();
@@ -468,8 +488,8 @@ export default function NewTransaction() {
                                 fullWidth
                                 loading={loading}
                             >
-                                <Printer size={20} />
-                                Simpan & Print
+                                <Check size={20} />
+                                Proses
                             </Button>
                             <Button
                                 type="button"
@@ -537,6 +557,55 @@ export default function NewTransaction() {
                                 </div>
                             )}
                     </div>
+                </div>
+            </Modal>
+
+            {/* Success Modal */}
+            <Modal
+                isOpen={showSuccessModal}
+                onClose={() => navigate('/transactions')}
+                title="Transaksi Berhasil"
+            >
+                <div className="space-y-4">
+                    <p className="text-center text-slate-600">
+                        Transaksi berhasil disimpan. Silakan pilih aksi selanjutnya.
+                    </p>
+
+                    <div className="bg-white border rounded-lg shadow-sm p-2 flex justify-center mb-4 overflow-hidden">
+                        <div className="scale-75 origin-top -mb-16">
+                            <PrintReceipt
+                                transaction={createdTransaction}
+                                className="block bg-white text-slate-900 pointer-events-none"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                        <Button
+                            variant="secondary"
+                            onClick={handlePrint}
+                            className="bg-slate-100 text-slate-700 hover:bg-slate-200"
+                        >
+                            <Printer size={20} />
+                            Print
+                        </Button>
+                        <Button
+                            variant="primary"
+                            onClick={handleWhatsApp}
+                            className="bg-green-600 hover:bg-green-700 text-white border-transparent"
+                        >
+                            <WhatsappLogo size={20} />
+                            Kirim WA
+                        </Button>
+                    </div>
+
+                    <Button
+                        variant="outline"
+                        fullWidth
+                        onClick={() => navigate('/transactions')}
+                    >
+                        Selesai / Tutup
+                    </Button>
                 </div>
             </Modal>
         </div>
