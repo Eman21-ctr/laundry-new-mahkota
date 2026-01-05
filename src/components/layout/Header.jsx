@@ -32,11 +32,9 @@ export default function Header() {
         <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
             <div className="container-padding">
                 <div className="flex items-center justify-between py-3">
-                    {/* Logo & Name */}
+                    {/* Logo */}
                     <div className="flex items-center gap-3">
-                        <h1 className="text-lg font-bold text-slate-900">
-                            Laundry New Mahkota
-                        </h1>
+                        <img src="/logo.png" alt="Laundry New Mahkota" className="h-10 w-auto rounded-lg shadow-sm" />
                     </div>
 
                     {/* Right side: Date, User, Logout */}

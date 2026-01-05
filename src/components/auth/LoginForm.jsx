@@ -83,7 +83,7 @@ export default function LoginForm() {
                 {/* Logo and Header */}
                 <div className="text-center mb-6">
                     <div className="flex justify-center mb-4">
-                        <IconBox icon={Drop} variant="primary" size="lg" />
+                        <img src="/logo.png" alt="Laundry New Mahkota" className="h-20 w-auto rounded-xl shadow-md" />
                     </div>
                     <h1 className="text-2xl font-bold text-slate-900 mb-1">
                         Laundry New Mahkota

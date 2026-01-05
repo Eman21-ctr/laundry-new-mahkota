@@ -6,8 +6,11 @@ import Modal from '../components/ui/Modal';
 import Button from '../components/ui/Button';
 import UserList from '../components/users/UserList';
 import UserForm from '../components/users/UserForm';
+import AppInfoForm from '../components/settings/AppInfoForm';
+import PriceSettingsTable from '../components/settings/PriceSettingsTable';
 import { getUsers, createUser, updateUser, deleteUser, toggleUserStatus } from '../services/users';
-import { Plus } from 'phosphor-react';
+import { getAppSettings, getPriceSettings } from '../services/settings';
+import { Plus, Users as UsersIcon, Storefront } from 'phosphor-react';
 
 export default function Users() {
     const [users, setUsers] = useState([]);
@@ -15,6 +18,12 @@ export default function Users() {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [actionLoading, setActionLoading] = useState(false);
+    const [activeTab, setActiveTab] = useState('settings'); // Default to settings/toko
+
+    // Settings state
+    const [appSettings, setAppSettings] = useState(null);
+    const [priceSettings, setPriceSettings] = useState([]);
+    const [settingsLoading, setSettingsLoading] = useState(false);
 
     const fetchUsers = async () => {
         setLoading(true);
@@ -29,8 +38,25 @@ export default function Users() {
         }
     };
 
+    const fetchSettings = async () => {
+        setSettingsLoading(true);
+        try {
+            const [appData, priceData] = await Promise.all([
+                getAppSettings(),
+                getPriceSettings(),
+            ]);
+            setAppSettings(appData);
+            setPriceSettings(priceData);
+        } catch (error) {
+            console.error('Error fetching settings:', error);
+        } finally {
+            setSettingsLoading(false);
+        }
+    };
+
     useEffect(() => {
         fetchUsers();
+        fetchSettings();
     }, []);
 
     const handleAddUser = () => {
@@ -96,28 +122,78 @@ export default function Users() {
                 <Header />
 
                 <Container className="flex-1 py-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                        <div>
-                            <h1 className="text-2xl font-bold text-slate-900">Kelola Pengguna</h1>
-                            <p className="text-slate-500 text-sm">Kelola akses kasir dan pemilik toko</p>
-                        </div>
-                        <Button
-                            variant="primary"
-                            onClick={handleAddUser}
-                            className="w-full sm:w-auto"
-                        >
-                            <Plus size={20} weight="bold" />
-                            Tambah Pengguna
-                        </Button>
+                    <div className="mb-6">
+                        <h1 className="text-2xl font-bold text-slate-900">Manajemen Toko</h1>
+                        <p className="text-slate-500 text-sm">Kelola informasi toko, harga layanan, dan staf</p>
                     </div>
 
-                    <UserList
-                        users={users}
-                        loading={loading}
-                        onEdit={handleEditUser}
-                        onToggleStatus={handleToggleStatus}
-                        onDelete={handleDeleteUser}
-                    />
+                    {/* Tabs */}
+                    <div className="flex border-b border-slate-200 mb-6 overflow-x-auto">
+                        <button
+                            onClick={() => setActiveTab('settings')}
+                            className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors whitespace-nowrap ${activeTab === 'settings'
+                                ? 'border-primary-500 text-primary-600 font-semibold'
+                                : 'border-transparent text-slate-500 hover:text-slate-700'
+                                }`}
+                        >
+                            <Storefront size={20} />
+                            Toko & Harga
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('users')}
+                            className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors whitespace-nowrap ${activeTab === 'users'
+                                ? 'border-primary-500 text-primary-600 font-semibold'
+                                : 'border-transparent text-slate-500 hover:text-slate-700'
+                                }`}
+                        >
+                            <UsersIcon size={20} />
+                            Kelola Staff
+                        </button>
+                    </div>
+
+                    {activeTab === 'settings' ? (
+                        <div className="space-y-6">
+                            {settingsLoading ? (
+                                <div className="flex justify-center py-12">
+                                    <div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full"></div>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                                    <div className="lg:col-span-1">
+                                        <AppInfoForm settings={appSettings} onUpdate={fetchSettings} />
+                                    </div>
+                                    <div className="lg:col-span-2">
+                                        <PriceSettingsTable priceSettings={priceSettings} onUpdate={fetchSettings} />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <>
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                                <div>
+                                    <h2 className="text-xl font-bold text-slate-900">Kelola Pengguna</h2>
+                                    <p className="text-slate-500 text-sm">Kelola akses kasir dan pemilik toko</p>
+                                </div>
+                                <Button
+                                    variant="primary"
+                                    onClick={handleAddUser}
+                                    className="w-full sm:w-auto"
+                                >
+                                    <Plus size={20} weight="bold" />
+                                    Tambah Pengguna
+                                </Button>
+                            </div>
+
+                            <UserList
+                                users={users}
+                                loading={loading}
+                                onEdit={handleEditUser}
+                                onToggleStatus={handleToggleStatus}
+                                onDelete={handleDeleteUser}
+                            />
+                        </>
+                    )}
                 </Container>
             </div>
 

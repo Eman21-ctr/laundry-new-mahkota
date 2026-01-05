@@ -43,12 +43,11 @@ export default function Dashboard() {
     const quickActions = [
         { label: 'Transaksi Baru', icon: Plus, to: '/new-transaction', variant: 'primary' },
         { label: 'Catat Pengeluaran', icon: Wallet, to: '/record-expense', variant: 'danger' },
-        { label: 'Lihat Transaksi', icon: ReceiptIcon, to: '/transactions' },
+        { label: 'Daftar Transaksi', icon: ReceiptIcon, to: '/transactions' },
         { label: 'Laporan', icon: ChartLine, to: '/reports' },
-        { label: 'Pengaturan', icon: Gear, to: '/settings' },
     ];
 
-    // Add Users action for owner only
+    // Add Pengguna/Pengaturan action for owner only
     if (isOwner) {
         quickActions.push({ label: 'Pengguna', icon: Users, to: '/users' });
     }
@@ -62,29 +61,39 @@ export default function Dashboard() {
             <div className="flex-1 flex flex-col pb-16 md:pb-0">
                 <Header />
 
-                <Container className="flex-1 py-4 section-gap">
+                <Container className="flex-1 py-6 section-gap">
+                    {/* Welcome Message */}
+                    <div className="mb-6">
+                        <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
+                            Selamat Datang, {user?.profile?.full_name?.split(' ')[0] || 'Bosku'}! 👋
+                        </h1>
+                        <p className="text-slate-600 mt-1">
+                            Semoga harimu menyenangkan dan bisnis makin lancar.
+                        </p>
+                    </div>
+
                     {/* Quick Stats */}
                     <div className="grid grid-cols-3 gap-2 md:gap-4">
-                        <Card className="text-center">
+                        <Card className="text-center p-3 md:p-4">
                             <IconBox icon={ReceiptIcon} variant="secondary" size="sm" className="mx-auto mb-2" />
-                            <p className="text-xs text-slate-600 mb-1">Transaksi Hari Ini</p>
-                            <p className="text-xl md:text-2xl font-bold text-slate-900">
+                            <p className="text-xs text-slate-500 mb-1">Transaksi</p>
+                            <p className="text-lg md:text-xl font-bold text-slate-900">
                                 {stats.totalTransactions}
                             </p>
                         </Card>
 
-                        <Card className="text-center">
+                        <Card className="text-center p-3 md:p-4">
                             <IconBox icon={TrendUp} variant="secondary" size="sm" className="mx-auto mb-2" />
-                            <p className="text-xs text-slate-600 mb-1">Pendapatan Hari Ini</p>
-                            <p className="text-base md:text-lg font-bold text-slate-900">
+                            <p className="text-xs text-slate-500 mb-1">Pendapatan</p>
+                            <p className="text-lg md:text-xl font-bold text-slate-900">
                                 {formatCurrency(stats.totalRevenue)}
                             </p>
                         </Card>
 
-                        <Card className="text-center">
+                        <Card className="text-center p-3 md:p-4">
                             <IconBox icon={Package} variant="secondary" size="sm" className="mx-auto mb-2" />
-                            <p className="text-xs text-slate-600 mb-1">Pesanan Aktif</p>
-                            <p className="text-xl md:text-2xl font-bold text-slate-900">
+                            <p className="text-xs text-slate-500 mb-1">Aktif</p>
+                            <p className="text-lg md:text-xl font-bold text-slate-900">
                                 {stats.activeOrders}
                             </p>
                         </Card>
