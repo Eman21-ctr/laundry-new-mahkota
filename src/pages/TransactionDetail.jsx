@@ -14,6 +14,7 @@ import Modal from '../components/ui/Modal';
 import PrintReceipt from '../components/print/PrintReceipt';
 import { useRef } from 'react';
 import { generateAndOpenPDF } from '../utils/pdfGenerator';
+import { supabase } from '../services/supabase';
 
 export default function TransactionDetail() {
     const { id } = useParams();
