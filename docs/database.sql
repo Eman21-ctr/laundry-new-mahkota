@@ -21,7 +21,7 @@ END $$;
 
 -- Item type enum
 DO $$ BEGIN
-    CREATE TYPE item_type AS ENUM ('kiloan_reguler', 'kiloan_ekspres', 'karpet', 'bedcover');
+    CREATE TYPE item_type AS ENUM ('kiloan_reguler', 'kiloan_ekspres', 'karpet', 'bedcover', 'setrika_reguler', 'setrika_ekspres');
 EXCEPTION
     WHEN duplicate_object THEN null;
 END $$;
@@ -163,6 +163,8 @@ INSERT INTO price_settings (item_type, item_label, price, unit, duration_days)
 VALUES 
     ('kiloan_reguler', 'Baju Kiloan (Reguler)', 6000.00, 'kg', 3),
     ('kiloan_ekspres', 'Baju Kiloan (Ekspres)', 10000.00, 'kg', 1),
+    ('setrika_reguler', 'Setrika (Reguler)', 4000.00, 'kg', 3),
+    ('setrika_ekspres', 'Setrika (Express)', 5000.00, 'kg', 1),
     ('karpet', 'Karpet', 25000.00, 'pcs', NULL),
     ('bedcover', 'Bedcover', 30000.00, 'pcs', NULL)
 ON CONFLICT (item_type) DO NOTHING;
