@@ -16,6 +16,19 @@ export async function searchCustomers(query) {
 }
 
 /**
+ * Get all customers
+ */
+export async function getCustomers() {
+    const { data, error } = await supabase
+        .from('customers')
+        .select('*')
+        .order('name', { ascending: true });
+
+    if (error) throw error;
+    return data;
+}
+
+/**
  * Create or get existing customer
  */
 export async function createOrGetCustomer(name, phone) {

@@ -76,7 +76,19 @@ export async function getTodayStats() {
  * Create new transaction
  */
 export async function createTransaction(transactionData, items) {
-    const { customer_id, customer_name, customer_phone, total_amount, paid_amount, status, notes, date_in, date_out, created_by } = transactionData;
+    const {
+        customer_id,
+        customer_name,
+        customer_phone,
+        total_amount,
+        paid_amount,
+        status,
+        notes,
+        date_in,
+        date_out,
+        created_by,
+        payment_method
+    } = transactionData;
 
     // Generate transaction number
     const transaction_number = await getNextTransactionNumber(supabase);
@@ -96,6 +108,7 @@ export async function createTransaction(transactionData, items) {
             date_in,
             date_out,
             created_by,
+            payment_method
         })
         .select()
         .single();

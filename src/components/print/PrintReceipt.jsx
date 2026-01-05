@@ -51,6 +51,12 @@ export default function PrintReceipt({ transaction, laundryInfo, ref }) {
                         <span>Dibayar:</span>
                         <span>{formatCurrency(transaction.paid_amount)}</span>
                     </div>
+                    {transaction.payment_method && (
+                        <div className="flex justify-between">
+                            <span>Metode:</span>
+                            <span>{transaction.payment_method}</span>
+                        </div>
+                    )}
                     {transaction.paid_amount < transaction.total_amount && (
                         <div className="flex justify-between text-red-600">
                             <span>Sisa:</span>

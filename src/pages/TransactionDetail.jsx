@@ -184,6 +184,12 @@ export default function TransactionDetail() {
                                         <span className="text-slate-600">Dibayar:</span>
                                         <span className="font-medium">{formatCurrency(transaction.paid_amount)}</span>
                                     </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-slate-600">Metode:</span>
+                                        <Badge variant={(transaction.payment_method || 'Tunai').toLowerCase()}>
+                                            {transaction.payment_method || 'Tunai'}
+                                        </Badge>
+                                    </div>
                                     {transaction.paid_amount >= transaction.total_amount ? (
                                         <div className="flex items-center gap-2 text-green-600 pt-2">
                                             <CheckCircle size={20} weight="fill" />

@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     total_amount DECIMAL(10,2) NOT NULL,
     paid_amount DECIMAL(10,2) NOT NULL DEFAULT 0,
     status transaction_status DEFAULT 'proses',
+    payment_method VARCHAR(50) DEFAULT 'Tunai',
     notes TEXT,
     date_in TIMESTAMP WITH TIME ZONE NOT NULL,
     date_out TIMESTAMP WITH TIME ZONE NOT NULL,

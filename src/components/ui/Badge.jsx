@@ -13,6 +13,9 @@ export default function Badge({ children, variant = 'default', className = '' })
         kasir: 'bg-slate-100 text-slate-700',
         active: 'bg-green-50 text-green-700',
         inactive: 'bg-red-50 text-red-700',
+        tunai: 'bg-blue-50 text-blue-700',
+        qris: 'bg-purple-50 text-purple-700',
+        transfer: 'bg-indigo-50 text-indigo-700',
     };
 
     return (

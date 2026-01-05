@@ -142,6 +142,11 @@ export default function TransactionList() {
                                                     <Badge variant={transaction.status}>
                                                         {transaction.status}
                                                     </Badge>
+                                                    {transaction.payment_method && (
+                                                        <Badge variant={transaction.payment_method.toLowerCase()}>
+                                                            {transaction.payment_method}
+                                                        </Badge>
+                                                    )}
                                                 </div>
                                                 <p className="font-medium text-slate-700">
                                                     {transaction.customer_name}

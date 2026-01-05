@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Plus, Trash, Printer } from 'phosphor-react';
+import { ArrowLeft, Plus, Trash, Printer, UserPlus, Users as UsersIcon, Bank, QrCode, Wallet, Money } from 'phosphor-react';
 import useAuth from '../hooks/useAuth';
 import { getPriceSettings } from '../services/settings';
-import { searchCustomers, createOrGetCustomer } from '../services/customers';
+import { searchCustomers, createOrGetCustomer, getCustomers } from '../services/customers';
 import { createTransaction } from '../services/transactions';
 import { formatCurrency, formatDateTimeLocal, parseDateTimeLocal } from '../utils/formatters';
 import { validatePhone } from '../utils/validators';
@@ -13,6 +13,7 @@ import Container from '../components/layout/Container';
 import Card from '../components/ui/Card';
 import Input from '../components/ui/Input';
 import Button from '../components/ui/Button';
+import Modal from '../components/ui/Modal';
 
 export default function NewTransaction() {
     const navigate = useNavigate();
@@ -23,6 +24,7 @@ export default function NewTransaction() {
         customer_name: '',
         customer_phone: '',
         notes: '',
+        payment_method: 'Tunai',
     });
     const [items, setItems] = useState([{
         item_type: '',
@@ -33,12 +35,26 @@ export default function NewTransaction() {
     }]);
     const [customerSuggestions, setCustomerSuggestions] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const [allCustomers, setAllCustomers] = useState([]);
+    const [showCustomerModal, setShowCustomerModal] = useState(false);
+    const [customerMode, setCustomerMode] = useState('select'); // 'select' or 'add'
+    const [searchQuery, setSearchQuery] = useState('');
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         loadPriceSettings();
+        loadCustomers();
     }, []);
+
+    const loadCustomers = async () => {
+        try {
+            const data = await getCustomers();
+            setAllCustomers(data);
+        } catch (error) {
+            console.error('Error loading customers:', error);
+        }
+    };
 
     const loadPriceSettings = async () => {
         try {
@@ -72,6 +88,8 @@ export default function NewTransaction() {
             customer_phone: customer.phone,
         });
         setShowSuggestions(false);
+        setShowCustomerModal(false);
+        setCustomerMode('select');
     };
 
     const handleItemChange = (index, field, value) => {
@@ -183,6 +201,7 @@ export default function NewTransaction() {
                     customer_phone: formData.customer_phone.trim(),
                     total_amount: total,
                     paid_amount: total, // Assuming full payment for now
+                    payment_method: formData.payment_method,
                     status: 'proses',
                     notes: formData.notes.trim(),
                     date_in: new Date().toISOString(),
@@ -229,41 +248,99 @@ export default function NewTransaction() {
                     <form onSubmit={handleSubmit} className="space-y-4 max-w-2xl">
                         {/* Customer Data */}
                         <Card>
-                            <h2 className="font-semibold text-slate-900 mb-3">Data Pelanggan</h2>
-                            <div className="space-y-3">
-                                <div className="relative">
+                            <div className="flex items-center justify-between mb-4">
+                                <h2 className="font-semibold text-slate-900">Data Pelanggan</h2>
+                                {customerMode === 'select' ? (
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => {
+                                            setCustomerMode('add');
+                                            setFormData({ ...formData, customer_name: '', customer_phone: '' });
+                                        }}
+                                        className="text-primary-600 border-primary-100 hover:bg-primary-50"
+                                    >
+                                        <UserPlus size={18} />
+                                        Pelanggan Baru
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setCustomerMode('select')}
+                                        className="text-slate-600 border-slate-200 hover:bg-slate-50"
+                                    >
+                                        <UsersIcon size={18} />
+                                        Pilih Dari Daftar
+                                    </Button>
+                                )}
+                            </div>
+
+                            {customerMode === 'select' ? (
+                                <div className="space-y-3">
+                                    <div className="relative">
+                                        <div
+                                            onClick={() => setShowCustomerModal(true)}
+                                            className={`w-full h-11 px-4 py-2 bg-white border ${errors.customer_name ? 'border-red-500' : 'border-slate-300'} rounded-lg flex items-center justify-between cursor-pointer hover:border-primary-400 transition-colors shadow-sm`}
+                                        >
+                                            <span className={formData.customer_name ? 'text-slate-900' : 'text-slate-400'}>
+                                                {formData.customer_name || 'Pilih Pelanggan...'}
+                                            </span>
+                                            <UsersIcon size={20} className="text-slate-400" />
+                                        </div>
+                                        {errors.customer_name && (
+                                            <p className="mt-1 text-xs text-red-500">{errors.customer_name}</p>
+                                        )}
+                                        {formData.customer_phone && (
+                                            <p className="mt-1 text-xs text-slate-500">No HP: {formData.customer_phone}</p>
+                                        )}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="space-y-3">
                                     <Input
                                         label="Nama Pelanggan"
                                         value={formData.customer_name}
-                                        onChange={(e) => handleCustomerSearch(e.target.value)}
+                                        onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
                                         error={errors.customer_name}
                                         placeholder="Nama lengkap"
                                     />
-                                    {showSuggestions && customerSuggestions.length > 0 && (
-                                        <div className="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-md shadow-lg max-h-48 overflow-y-auto">
-                                            {customerSuggestions.map((customer) => (
-                                                <button
-                                                    key={customer.id}
-                                                    type="button"
-                                                    onClick={() => selectCustomer(customer)}
-                                                    className="w-full text-left px-3 py-2 hover:bg-slate-50 text-sm"
-                                                >
-                                                    <div className="font-medium">{customer.name}</div>
-                                                    <div className="text-xs text-slate-500">{customer.phone}</div>
-                                                </button>
-                                            ))}
-                                        </div>
-                                    )}
+                                    <Input
+                                        label="Nomor HP"
+                                        type="tel"
+                                        value={formData.customer_phone}
+                                        onChange={(e) => setFormData({ ...formData, customer_phone: e.target.value })}
+                                        error={errors.customer_phone}
+                                        placeholder="08xx atau 628xx"
+                                    />
                                 </div>
+                            )}
+                        </Card>
 
-                                <Input
-                                    label="Nomor HP"
-                                    type="tel"
-                                    value={formData.customer_phone}
-                                    onChange={(e) => setFormData({ ...formData, customer_phone: e.target.value })}
-                                    error={errors.customer_phone}
-                                    placeholder="08xx atau 628xx"
-                                />
+                        {/* Payment Method */}
+                        <Card>
+                            <h2 className="font-semibold text-slate-900 mb-3">Metode Pembayaran</h2>
+                            <div className="grid grid-cols-3 gap-3">
+                                {[
+                                    { id: 'Tunai', icon: Money, label: 'Tunai' },
+                                    { id: 'QRIS', icon: QrCode, label: 'QRIS' },
+                                    { id: 'Transfer', icon: Bank, label: 'Transfer' },
+                                ].map((method) => (
+                                    <button
+                                        key={method.id}
+                                        type="button"
+                                        onClick={() => setFormData({ ...formData, payment_method: method.id })}
+                                        className={`flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all duration-200 ${formData.payment_method === method.id
+                                                ? 'border-primary-500 bg-primary-50 text-primary-700 shadow-sm'
+                                                : 'border-slate-100 bg-slate-50 text-slate-500 hover:border-slate-200 hover:bg-white'
+                                            }`}
+                                    >
+                                        <method.icon size={28} weight={formData.payment_method === method.id ? "fill" : "regular"} />
+                                        <span className="text-xs font-semibold mt-2">{method.label}</span>
+                                    </button>
+                                ))}
                             </div>
                         </Card>
 
@@ -387,6 +464,63 @@ export default function NewTransaction() {
                     </form>
                 </Container>
             </div>
+
+            {/* Customer Selection Modal */}
+            <Modal
+                isOpen={showCustomerModal}
+                onClose={() => setShowCustomerModal(false)}
+                title="Pilih Pelanggan"
+            >
+                <div className="space-y-4">
+                    <Input
+                        placeholder="Cari nama atau no HP..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="mb-2"
+                    />
+                    <div className="max-h-96 overflow-y-auto space-y-2">
+                        {allCustomers
+                            .filter(c =>
+                                c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                c.phone.includes(searchQuery)
+                            )
+                            .map((customer) => (
+                                <button
+                                    key={customer.id}
+                                    type="button"
+                                    onClick={() => selectCustomer(customer)}
+                                    className="w-full text-left p-3 hover:bg-slate-50 border border-slate-100 rounded-xl transition-colors flex items-center gap-3"
+                                >
+                                    <div className="w-10 h-10 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold">
+                                        {customer.name.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <div className="font-semibold text-slate-900">{customer.name}</div>
+                                        <div className="text-sm text-slate-500">{customer.phone}</div>
+                                    </div>
+                                </button>
+                            ))}
+                        {allCustomers.filter(c =>
+                            c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            c.phone.includes(searchQuery)
+                        ).length === 0 && (
+                                <div className="text-center py-8 text-slate-500">
+                                    Pelanggan tidak ditemukan.
+                                    <br />
+                                    <button
+                                        className="text-primary-600 font-semibold mt-2 underline"
+                                        onClick={() => {
+                                            setCustomerMode('add');
+                                            setShowCustomerModal(false);
+                                        }}
+                                    >
+                                        Tambah sebagai pelanggan baru
+                                    </button>
+                                </div>
+                            )}
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 }
