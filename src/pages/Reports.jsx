@@ -91,28 +91,31 @@ export default function Reports() {
 
                 {/* World-Class Header Section */}
                 <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white pb-10 pt-20 -mt-20 px-6 shadow-lg relative overflow-hidden mb-6">
-                    <div className="max-w-4xl mx-auto">
-                        <div className="flex items-center gap-3 mb-4">
-                            <button
-                                onClick={() => navigate('/')}
-                                className="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-colors"
-                            >
-                                <ArrowLeft size={24} weight="bold" />
-                            </button>
-                            <div>
-                                <h1 className="text-2xl font-bold">Laporan</h1>
-                                <p className="text-blue-100 text-sm">Analisis pendapatan dan performa laundry</p>
-                            </div>
+                    <div className="max-w-4xl mx-auto flex items-center gap-3">
+                        <button
+                            onClick={() => navigate('/')}
+                            className="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-colors"
+                        >
+                            <ArrowLeft size={24} weight="bold" />
+                        </button>
+                        <div>
+                            <h1 className="text-2xl font-bold">Laporan</h1>
+                            <p className="text-blue-100 text-sm">Analisis pendapatan dan performa laundry</p>
                         </div>
+                    </div>
+                </div>
 
-                        <div className="bg-white/10 p-1 rounded-lg backdrop-blur-sm border border-white/20 inline-flex shadow-sm">
+                <div className="max-w-4xl mx-auto px-4 w-full">
+                    {/* Quick Filters - Moved out of header */}
+                    <div className="mb-6 flex justify-center">
+                        <div className="bg-white p-1 rounded-lg border border-slate-200 inline-flex shadow-sm">
                             {['today', 'month', 'custom'].map((type) => (
                                 <button
                                     key={type}
                                     onClick={() => handleQuickFilter(type)}
                                     className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeFilter === type
-                                        ? 'bg-white text-blue-600 shadow-sm'
-                                        : 'text-white/80 hover:bg-white/10'
+                                        ? 'bg-primary-50 text-primary-600 shadow-sm'
+                                        : 'text-slate-600 hover:bg-slate-50'
                                         }`}
                                 >
                                     {type === 'today' && 'Hari Ini'}
@@ -122,9 +125,6 @@ export default function Reports() {
                             ))}
                         </div>
                     </div>
-                </div>
-
-                <div className="max-w-4xl mx-auto px-4 w-full">
 
                     {/* Date Filters (Only show if Custom) */}
                     {activeFilter === 'custom' && (
