@@ -6,7 +6,7 @@ import React from 'react';
 export default function Card({ children, className = '', ...props }) {
     return (
         <div
-            className={`bg-white border border-slate-200 rounded-md p-3 shadow-subtle ${className}`}
+            className={`bg-white border border-slate-200 rounded-2xl p-5 shadow-subtle ${className}`}
             {...props}
         >
             {children}

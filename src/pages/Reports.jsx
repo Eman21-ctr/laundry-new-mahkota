@@ -85,23 +85,24 @@ export default function Reports() {
             <Navigation />
 
             <div className="flex-1 flex flex-col pb-16 md:pb-0">
-                <Header />
+                <Header transparent={true} />
 
-                <Container className="flex-1 py-4">
-                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+                {/* World-Class Header Section */}
+                <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white pb-10 pt-16 -mt-16 px-6 shadow-lg relative overflow-hidden mb-6">
+                    <div className="max-w-4xl mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                         <div>
-                            <h1 className="text-2xl font-bold text-slate-900">Laporan</h1>
-                            <p className="text-slate-500 text-sm">Analisis pendapatan dan performa laundry</p>
+                            <h1 className="text-2xl font-bold">Laporan</h1>
+                            <p className="text-blue-100 text-sm">Analisis pendapatan dan performa laundry</p>
                         </div>
 
-                        <div className="bg-white p-1 rounded-lg border border-slate-200 inline-flex shadow-sm">
+                        <div className="bg-white/10 p-1 rounded-lg backdrop-blur-sm border border-white/20 inline-flex shadow-sm">
                             {['today', 'month', 'custom'].map((type) => (
                                 <button
                                     key={type}
                                     onClick={() => handleQuickFilter(type)}
                                     className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeFilter === type
-                                            ? 'bg-primary-500 text-white shadow-sm'
-                                            : 'text-slate-600 hover:bg-slate-50'
+                                        ? 'bg-white text-blue-600 shadow-sm'
+                                        : 'text-white/80 hover:bg-white/10'
                                         }`}
                                 >
                                     {type === 'today' && 'Hari Ini'}
@@ -111,6 +112,9 @@ export default function Reports() {
                             ))}
                         </div>
                     </div>
+                </div>
+
+                <div className="max-w-4xl mx-auto px-4 w-full">
 
                     {/* Date Filters (Only show if Custom) */}
                     {activeFilter === 'custom' && (
@@ -202,7 +206,7 @@ export default function Reports() {
                             </div>
                         </div>
                     ) : null}
-                </Container>
+                </div>
             </div>
         </div>
     );

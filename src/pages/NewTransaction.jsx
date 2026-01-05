@@ -278,19 +278,25 @@ export default function NewTransaction() {
             <Navigation />
 
             <div className="flex-1 flex flex-col pb-16 md:pb-0">
-                <Header />
+                <Header transparent={true} />
 
-                <Container className="flex-1 py-4">
-                    <div className="flex items-center gap-3 mb-4">
-                        <Button
-                            variant="ghost"
-                            size="sm"
+                {/* World-Class Header Section */}
+                <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white pb-10 pt-16 -mt-16 px-6 shadow-lg relative overflow-hidden mb-6">
+                    <div className="max-w-4xl mx-auto flex items-center gap-3">
+                        <button
                             onClick={() => navigate('/')}
+                            className="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-colors"
                         >
-                            <ArrowLeft size={20} />
-                        </Button>
-                        <h1 className="text-2xl font-bold text-slate-900">Transaksi Baru</h1>
+                            <ArrowLeft size={24} weight="bold" />
+                        </button>
+                        <div>
+                            <h1 className="text-2xl font-bold text-white">Transaksi Baru</h1>
+                            <p className="text-blue-100 text-sm">Buat pesanan laundry baru</p>
+                        </div>
                     </div>
+                </div>
+
+                <div className="max-w-4xl mx-auto px-4 w-full">
 
                     <form onSubmit={handleSubmit} className="space-y-4 max-w-4xl mx-auto">
                         {/* Transaction Date */}
@@ -526,7 +532,7 @@ export default function NewTransaction() {
                             </Button>
                         </div>
                     </form>
-                </Container>
+                </div>
             </div>
 
             {/* Customer Selection Modal */}

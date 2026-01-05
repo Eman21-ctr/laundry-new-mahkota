@@ -125,13 +125,17 @@ export default function Users() {
             <Navigation />
 
             <div className="flex-1 flex flex-col pb-16 md:pb-0">
-                <Header />
+                <Header transparent={true} />
 
-                <Container className="flex-1 py-4">
-                    <div className="mb-6">
-                        <h1 className="text-2xl font-bold text-slate-900">Manajemen Toko</h1>
-                        <p className="text-slate-500 text-sm">Kelola informasi toko, harga layanan, dan staf</p>
+                {/* World-Class Header Section */}
+                <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white pb-10 pt-16 -mt-16 px-6 shadow-lg relative overflow-hidden mb-0">
+                    <div className="max-w-4xl mx-auto">
+                        <h1 className="text-2xl font-bold">Manajemen Toko</h1>
+                        <p className="text-blue-100 text-sm">Kelola informasi toko, harga layanan, dan staf</p>
                     </div>
+                </div>
+
+                <div className="max-w-4xl mx-auto px-4 w-full py-4">
 
                     {/* Tabs */}
                     <div className="flex border-b border-slate-200 mb-6 overflow-x-auto">
@@ -200,7 +204,7 @@ export default function Users() {
                             />
                         </>
                     )}
-                </Container>
+                </div>
             </div>
 
             <Modal
