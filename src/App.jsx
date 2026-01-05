@@ -11,7 +11,7 @@ import NewTransaction from './pages/NewTransaction';
 import TransactionList from './pages/TransactionList';
 import TransactionDetail from './pages/TransactionDetail';
 import Reports from './pages/Reports';
-import Settings from './pages/Settings';
+
 import Users from './pages/Users';
 import RecordExpense from './pages/RecordExpense';
 
