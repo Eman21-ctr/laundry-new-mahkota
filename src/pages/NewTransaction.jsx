@@ -244,7 +244,16 @@ export default function NewTransaction() {
     };
 
     const handlePrint = () => {
+        // Change title for the print job (becomes the default filename)
+        const originalTitle = document.title;
+        document.title = `Nota-${createdTransaction.transaction_number}`;
+
         window.print();
+
+        // Restore title after a short delay
+        setTimeout(() => {
+            document.title = originalTitle;
+        }, 500);
     };
 
     const total = calculateTotal();

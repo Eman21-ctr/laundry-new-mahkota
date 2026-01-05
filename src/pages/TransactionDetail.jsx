@@ -51,7 +51,12 @@ export default function TransactionDetail() {
     };
 
     const handlePrint = () => {
+        const originalTitle = document.title;
+        document.title = `Nota-${transaction.transaction_number}`;
         window.print();
+        setTimeout(() => {
+            document.title = originalTitle;
+        }, 500);
     };
 
     const handleStatusChange = async (newStatus) => {
