@@ -208,7 +208,7 @@ export default function NewTransaction() {
                     customer_name: formData.customer_name.trim(),
                     customer_phone: formData.customer_phone.trim(),
                     total_amount: total,
-                    paid_amount: parseFloat(formData.paid_amount.toString().replace(',', '.')) || total,
+                    paid_amount: formData.paid_amount === '' ? total : (parseFloat(formData.paid_amount.toString().replace(',', '.')) || 0),
                     payment_method: formData.payment_method,
                     status: 'proses',
                     notes: formData.notes.trim(),
@@ -527,7 +527,7 @@ export default function NewTransaction() {
                                         className="w-full h-11 pl-10 pr-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent font-bold text-lg text-primary-600"
                                     />
                                 </div>
-                                {formData.paid_amount < total && formData.paid_amount > 0 && (
+                                {formData.paid_amount !== '' && parseFloat(formData.paid_amount.toString().replace(',', '.')) < total && (
                                     <p className="text-xs text-amber-600 font-medium">
                                         Kurang: {formatCurrency(total - (parseFloat(formData.paid_amount.toString().replace(',', '.')) || 0))} (Marked as Belum Lunas)
                                     </p>
