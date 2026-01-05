@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import Navigation from '../components/layout/Navigation';
 import Container from '../components/layout/Container';
@@ -7,10 +8,11 @@ import ItemBreakdown from '../components/reports/ItemBreakdown';
 import { getReportStats } from '../services/transactions';
 import { getExpenseStats } from '../services/expenses';
 import { startOfMonth, endOfMonth, startOfToday, endOfToday, format, subDays, startOfWeek, endOfWeek } from 'date-fns';
-import { Calendar, Funnel, FileArrowDown } from 'phosphor-react';
+import { Calendar, Funnel, FileArrowDown, ArrowLeft } from 'phosphor-react';
 import Button from '../components/ui/Button';
 
 export default function Reports() {
+    const navigate = useNavigate();
     const [dateRange, setDateRange] = useState({
         start: format(startOfMonth(new Date()), 'yyyy-MM-dd'),
         end: format(endOfMonth(new Date()), 'yyyy-MM-dd'),
@@ -88,11 +90,19 @@ export default function Reports() {
                 <Header transparent={true} />
 
                 {/* World-Class Header Section */}
-                <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white pb-10 pt-16 -mt-16 px-6 shadow-lg relative overflow-hidden mb-6">
-                    <div className="max-w-4xl mx-auto flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                        <div>
-                            <h1 className="text-2xl font-bold">Laporan</h1>
-                            <p className="text-blue-100 text-sm">Analisis pendapatan dan performa laundry</p>
+                <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white pb-10 pt-20 -mt-20 px-6 shadow-lg relative overflow-hidden mb-6">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="flex items-center gap-3 mb-4">
+                            <button
+                                onClick={() => navigate('/')}
+                                className="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-colors"
+                            >
+                                <ArrowLeft size={24} weight="bold" />
+                            </button>
+                            <div>
+                                <h1 className="text-2xl font-bold">Laporan</h1>
+                                <p className="text-blue-100 text-sm">Analisis pendapatan dan performa laundry</p>
+                            </div>
                         </div>
 
                         <div className="bg-white/10 p-1 rounded-lg backdrop-blur-sm border border-white/20 inline-flex shadow-sm">

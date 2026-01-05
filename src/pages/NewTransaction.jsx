@@ -263,7 +263,7 @@ export default function NewTransaction() {
                 <Header transparent={true} />
 
                 {/* World-Class Header Section */}
-                <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white pb-10 pt-16 -mt-16 px-6 shadow-lg relative overflow-hidden mb-6">
+                <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white pb-10 pt-20 -mt-20 px-6 shadow-lg relative overflow-hidden mb-6">
                     <div className="max-w-4xl mx-auto flex items-center gap-3">
                         <button
                             onClick={() => navigate('/')}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/layout/Header';
 import Navigation from '../components/layout/Navigation';
 import Container from '../components/layout/Container';
@@ -11,9 +11,10 @@ import AppInfoForm from '../components/settings/AppInfoForm';
 import PriceSettingsTable from '../components/settings/PriceSettingsTable';
 import { getUsers, createUser, updateUser, deleteUser, toggleUserStatus } from '../services/users';
 import { getAppSettings, getPriceSettings } from '../services/settings';
-import { Plus, Users as UsersIcon, Storefront } from 'phosphor-react';
+import { Plus, Users as UsersIcon, Storefront, ArrowLeft } from 'phosphor-react';
 
 export default function Users() {
+    const navigate = useNavigate();
     const location = useLocation();
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -128,10 +129,18 @@ export default function Users() {
                 <Header transparent={true} />
 
                 {/* World-Class Header Section */}
-                <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white pb-10 pt-16 -mt-16 px-6 shadow-lg relative overflow-hidden mb-0">
-                    <div className="max-w-4xl mx-auto">
-                        <h1 className="text-2xl font-bold">Manajemen Toko</h1>
-                        <p className="text-blue-100 text-sm">Kelola informasi toko, harga layanan, dan staf</p>
+                <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white pb-10 pt-20 -mt-20 px-6 shadow-lg relative overflow-hidden mb-0">
+                    <div className="max-w-4xl mx-auto flex items-center gap-3">
+                        <button
+                            onClick={() => navigate('/')}
+                            className="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-colors"
+                        >
+                            <ArrowLeft size={24} weight="bold" />
+                        </button>
+                        <div>
+                            <h1 className="text-2xl font-bold">Manajemen Toko</h1>
+                            <p className="text-blue-100 text-sm">Kelola informasi toko, harga layanan, dan staf</p>
+                        </div>
                     </div>
                 </div>
 

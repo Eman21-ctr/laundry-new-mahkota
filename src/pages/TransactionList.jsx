@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { MagnifyingGlass, Funnel, Trash, Pencil, Wallet } from 'phosphor-react';
+import { MagnifyingGlass, Funnel, Trash, Pencil, Wallet, ArrowLeft } from 'phosphor-react';
 import { format } from 'date-fns';
 import { getTransactions } from '../services/transactions';
 import { getExpenses, deleteExpense } from '../services/expenses';
@@ -125,10 +125,18 @@ export default function TransactionList() {
                 <Header transparent={true} />
 
                 {/* World-Class Header Section */}
-                <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white pb-10 pt-16 -mt-16 px-6 shadow-lg relative overflow-hidden mb-6">
-                    <div className="max-w-4xl mx-auto">
-                        <h1 className="text-2xl font-bold">Daftar Transaksi</h1>
-                        <p className="text-blue-100 text-sm">Kelola pemasukan dan pengeluaran</p>
+                <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white pb-10 pt-20 -mt-20 px-6 shadow-lg relative overflow-hidden mb-6">
+                    <div className="max-w-4xl mx-auto flex items-center gap-3">
+                        <button
+                            onClick={() => navigate('/')}
+                            className="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-colors"
+                        >
+                            <ArrowLeft size={24} weight="bold" />
+                        </button>
+                        <div>
+                            <h1 className="text-2xl font-bold">Daftar Transaksi</h1>
+                            <p className="text-blue-100 text-sm">Kelola pemasukan dan pengeluaran</p>
+                        </div>
                     </div>
                 </div>
 
