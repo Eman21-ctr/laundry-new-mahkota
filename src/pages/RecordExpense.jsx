@@ -68,7 +68,7 @@ export default function RecordExpense() {
                 <Header />
 
                 <Container className="flex-1 py-4">
-                    <div className="max-w-xl mx-auto">
+                    <div className="max-w-2xl mx-auto">
                         <div className="mb-6 flex items-center gap-2">
                             <Button variant="ghost" className="p-2" onClick={() => navigate(-1)}>
                                 <ArrowLeft size={20} />
