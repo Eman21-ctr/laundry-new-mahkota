@@ -163,6 +163,5 @@ export default function RecordExpense() {
                 </div>
             </div>
         </div>
-        </div >
     );
 }

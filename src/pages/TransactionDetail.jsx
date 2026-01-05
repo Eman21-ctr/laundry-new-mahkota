@@ -280,68 +280,66 @@ export default function TransactionDetail() {
                     </div>
                 </div>
             </div>
-        </div >
 
-            {/* Print Receipt */ }
-            < div className = "hidden print:block absolute top-0 left-0 w-full bg-white z-[9999]" >
+            {/* Print Receipt */}
+            <div className="hidden print:block absolute top-0 left-0 w-full bg-white z-[9999]">
                 <div ref={receiptRef}>
                     <PrintReceipt transaction={transaction} laundryInfo={laundryInfo} className="print-content" />
                 </div>
-            </div >
+            </div>
 
-        {/* Status Modal */ }
-        < Modal
-    isOpen = { showStatusModal }
-    onClose = {() => setShowStatusModal(false)
-}
-title = "Ubah Status"
-size = "sm"
-    >
-    <div className="space-y-2">
-        {statusOptions.map((option) => (
-            <Button
-                key={option.value}
-                variant={transaction.status === option.value ? 'primary' : 'secondary'}
-                fullWidth
-                onClick={() => handleStatusChange(option.value)}
-                disabled={option.disabled}
+            {/* Status Modal */}
+            <Modal
+                isOpen={showStatusModal}
+                onClose={() => setShowStatusModal(false)}
+                title="Ubah Status"
+                size="sm"
             >
-                {option.label}
-            </Button>
-        ))}
-    </div>
-            </Modal >
+                <div className="space-y-2">
+                    {statusOptions.map((option) => (
+                        <Button
+                            key={option.value}
+                            variant={transaction.status === option.value ? 'primary' : 'secondary'}
+                            fullWidth
+                            onClick={() => handleStatusChange(option.value)}
+                            disabled={option.disabled}
+                        >
+                            {option.label}
+                        </Button>
+                    ))}
+                </div>
+            </Modal>
 
-    {/* Delete Modal */ }
-    < Modal
-isOpen = { showDeleteModal }
-onClose = {() => setShowDeleteModal(false)}
-title = "Hapus Transaksi"
-size = "sm"
-    >
-    <div className="space-y-4">
-        <p className="text-slate-700">
-            Yakin ingin menghapus transaksi <strong>{transaction.transaction_number}</strong>?
-            Tindakan ini tidak dapat dibatalkan.
-        </p>
-        <div className="flex gap-2">
-            <Button
-                variant="destructive"
-                fullWidth
-                onClick={handleDelete}
+            {/* Delete Modal */}
+            <Modal
+                isOpen={showDeleteModal}
+                onClose={() => setShowDeleteModal(false)}
+                title="Hapus Transaksi"
+                size="sm"
             >
-                Ya, Hapus
-            </Button>
-            <Button
-                variant="secondary"
-                fullWidth
-                onClick={() => setShowDeleteModal(false)}
-            >
-                Batal
-            </Button>
-        </div>
-    </div>
-            </Modal >
+                <div className="space-y-4">
+                    <p className="text-slate-700">
+                        Yakin ingin menghapus transaksi <strong>{transaction.transaction_number}</strong>?
+                        Tindakan ini tidak dapat dibatalkan.
+                    </p>
+                    <div className="flex gap-2">
+                        <Button
+                            variant="destructive"
+                            fullWidth
+                            onClick={handleDelete}
+                        >
+                            Ya, Hapus
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            fullWidth
+                            onClick={() => setShowDeleteModal(false)}
+                        >
+                            Batal
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
         </>
     );
 }

@@ -306,7 +306,5 @@ export default function TransactionList() {
                 </div>
             </div>
         </div>
-        </div >
     );
 }
-```
