@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { House, Receipt, ChartLine, Gear, Users } from 'phosphor-react';
+import { House, Receipt, Wallet, Users } from 'phosphor-react';
 import useAuth from '../../hooks/useAuth';
 
 export default function Navigation() {
