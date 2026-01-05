@@ -237,7 +237,9 @@ export default function NewTransaction() {
 
         const message = `Halo ${createdTransaction.customer_name},%0A%0ATerima kasih telah menggunakan jasa laundry kami.%0A%0ANo. Nota: *${createdTransaction.transaction_number}*%0ATanggal: ${date}%0A%0ARincian:%0A${itemsList}%0A%0ATotal: *${formatCurrency(createdTransaction.total_amount)}*%0AStatus: ${createdTransaction.status.toUpperCase()}%0A%0ASilakan simpan nota ini sebagai bukti pengambilan.%0ATerima kasih!`;
 
-        window.open(`https://wa.me/${createdTransaction.customer_phone.replace(/^0/, '62').replace(/[^0-9]/g, '')}?text=${message}`, '_blank');
+        // Properly encode the message for URL
+        const encodedMessage = encodeURIComponent(message.replace(/%0A/g, '\n'));
+        window.open(`https://wa.me/${createdTransaction.customer_phone.replace(/^0/, '62').replace(/[^0-9]/g, '')}?text=${encodedMessage}`, '_blank');
     };
 
     const handlePrint = () => {
