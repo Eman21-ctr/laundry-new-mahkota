@@ -121,7 +121,9 @@ export default function NewTransaction() {
         }
 
         if (newItems[index].quantity && newItems[index].unit_price) {
-            newItems[index].subtotal = parseFloat(newItems[index].quantity) * parseFloat(newItems[index].unit_price);
+            // Handle both comma and period as decimal separator
+            const qty = parseFloat(newItems[index].quantity.toString().replace(',', '.'));
+            newItems[index].subtotal = (qty || 0) * parseFloat(newItems[index].unit_price);
         }
 
         setItems(newItems);
@@ -206,7 +208,7 @@ export default function NewTransaction() {
                     customer_name: formData.customer_name.trim(),
                     customer_phone: formData.customer_phone.trim(),
                     total_amount: total,
-                    paid_amount: parseFloat(formData.paid_amount) || total,
+                    paid_amount: parseFloat(formData.paid_amount.toString().replace(',', '.')) || total,
                     payment_method: formData.payment_method,
                     status: 'proses',
                     notes: formData.notes.trim(),
@@ -527,7 +529,7 @@ export default function NewTransaction() {
                                 </div>
                                 {formData.paid_amount < total && formData.paid_amount > 0 && (
                                     <p className="text-xs text-amber-600 font-medium">
-                                        Kurang: {formatCurrency(total - (parseFloat(formData.paid_amount) || 0))} (Marked as Belum Lunas)
+                                        Kurang: {formatCurrency(total - (parseFloat(formData.paid_amount.toString().replace(',', '.')) || 0))} (Marked as Belum Lunas)
                                     </p>
                                 )}
                             </div>
