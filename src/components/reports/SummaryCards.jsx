@@ -1,5 +1,5 @@
 import React from 'react';
-import { Receipt, Money, Scales, ChartBar } from 'phosphor-react';
+import { Receipt, Money, Scales, ChartBar, Wallet } from 'phosphor-react';
 import IconBox from '../ui/IconBox';
 import { formatCurrency } from '../../utils/formatters';
 
@@ -20,6 +20,20 @@ export default function SummaryCards({ stats }) {
             suffix: ''
         },
         {
+            label: 'Total Pengeluaran',
+            value: formatCurrency(stats.totalExpenses || 0),
+            icon: Wallet,
+            variant: 'danger',
+            suffix: ''
+        },
+        {
+            label: 'Laba Bersih',
+            value: formatCurrency(stats.netProfit || 0),
+            icon: Money,
+            variant: (stats.netProfit || 0) >= 0 ? 'success' : 'danger',
+            suffix: ''
+        },
+        {
             label: 'Total Berat',
             value: stats.totalWeight.toFixed(2),
             icon: Scales,
@@ -36,7 +50,7 @@ export default function SummaryCards({ stats }) {
     ];
 
     return (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
             {cards.map((card, index) => (
                 <div key={index} className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
                     <div className="flex items-center gap-3 mb-2">

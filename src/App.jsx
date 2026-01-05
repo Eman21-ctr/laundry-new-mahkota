@@ -13,6 +13,7 @@ import TransactionDetail from './pages/TransactionDetail';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import Users from './pages/Users';
+import Expenses from './pages/Expenses';
 
 export default function App() {
     return (
@@ -61,6 +62,14 @@ export default function App() {
                         element={
                             <ProtectedRoute>
                                 <Reports />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/expenses"
+                        element={
+                            <ProtectedRoute>
+                                <Expenses />
                             </ProtectedRoute>
                         }
                     />

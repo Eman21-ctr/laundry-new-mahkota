@@ -5,6 +5,7 @@ import Container from '../components/layout/Container';
 import SummaryCards from '../components/reports/SummaryCards';
 import ItemBreakdown from '../components/reports/ItemBreakdown';
 import { getReportStats } from '../services/transactions';
+import { getExpenseStats } from '../services/expenses';
 import { startOfMonth, endOfMonth, startOfToday, endOfToday, format, subDays, startOfWeek, endOfWeek } from 'date-fns';
 import { Calendar, Funnel, FileArrowDown } from 'phosphor-react';
 import Button from '../components/ui/Button';
@@ -27,11 +28,17 @@ export default function Reports() {
             const endStr = new Date(dateRange.end);
             endStr.setHours(23, 59, 59, 999);
 
-            const data = await getReportStats(
-                startStr.toISOString(),
-                endStr.toISOString()
-            );
-            setStats(data);
+            const [transactionData, expenseData] = await Promise.all([
+                getReportStats(startStr.toISOString(), endStr.toISOString()),
+                getExpenseStats(startStr.toISOString(), endStr.toISOString())
+            ]);
+
+            setStats({
+                ...transactionData,
+                totalExpenses: expenseData.totalExpenses,
+                netProfit: transactionData.totalRevenue - expenseData.totalExpenses,
+                expenseBreakdown: expenseData.categoryBreakdown
+            });
         } catch (error) {
             console.error('Error fetching report:', error);
             alert('Gagal mengambil data laporan');
