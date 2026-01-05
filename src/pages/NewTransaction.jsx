@@ -409,12 +409,12 @@ export default function NewTransaction() {
 
                                                 <div className="flex gap-2">
                                                     <Input
-                                                        type="number"
+                                                        type="text"
+                                                        inputMode="decimal"
                                                         value={item.quantity}
                                                         onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
-                                                        placeholder="Jumlah"
+                                                        placeholder="0.0"
                                                         className="flex-1"
-                                                        step={item.unit === 'kg' ? '0.5' : '1'}
                                                         min="0"
                                                     />
                                                     <div className="flex items-center px-3 bg-slate-100 rounded text-sm text-slate-700 min-w-[60px] justify-center">
@@ -520,7 +520,8 @@ export default function NewTransaction() {
                                 <div className="relative">
                                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-semibold text-sm">Rp</span>
                                     <input
-                                        type="number"
+                                        type="text"
+                                        inputMode="decimal"
                                         value={formData.paid_amount}
                                         onChange={(e) => setFormData({ ...formData, paid_amount: e.target.value })}
                                         placeholder={total.toString()}
