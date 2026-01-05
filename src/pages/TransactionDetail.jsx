@@ -22,7 +22,7 @@ export default function TransactionDetail() {
     const [laundryInfo, setLaundryInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
     const [showStatusModal, setShowStatusModal] = useState(false);
     const receiptRef = useRef(null);
 
