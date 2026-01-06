@@ -146,48 +146,23 @@ export default function TransactionList() {
 
                 <div className="max-w-4xl mx-auto px-4 w-full">
 
-                    {/* Filter Bar */}
-                    <Card className="mb-4">
-                        {/* Transaction Status Tabs (Only visible for Pemasukan) */}
-                        {mainTab === 'pemasukan' && (
-                            <div className="space-y-4 mb-4">
-                                <div>
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Status Pesanan</p>
-                                    <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                    {/* Filter Section */}
+                    {mainTab === 'pemasukan' && (
+                        <div className="mb-6 space-y-6">
+                            {/* Status Pesanan Tabs */}
+                            <div>
+                                <h3 className="text-center text-sm font-semibold text-slate-500 mb-3">Status Pesanan</h3>
+                                <div className="flex justify-center border-b border-slate-200 overflow-x-auto">
+                                    <div className="flex space-x-2">
                                         {transactionTabs.map((tab) => (
                                             <button
                                                 key={tab.value}
                                                 onClick={() => setStatusTab(tab.value)}
                                                 className={`
-                                                    px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all
+                                                    px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap
                                                     ${statusTab === tab.value
-                                                        ? 'bg-blue-600 text-white shadow-md shadow-blue-200'
-                                                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                                                    }
-                                                `}
-                                            >
-                                                {tab.label}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div className="pt-2 border-t border-slate-50">
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Status Pembayaran</p>
-                                    <div className="flex gap-2">
-                                        {[
-                                            { value: 'semua', label: 'Semua' },
-                                            { value: 'lunas', label: 'Lunas' },
-                                            { value: 'belum_lunas', label: 'Belum Lunas' },
-                                        ].map((tab) => (
-                                            <button
-                                                key={tab.value}
-                                                onClick={() => setPaymentStatusTab(tab.value)}
-                                                className={`
-                                                    px-4 py-1.5 rounded-full text-xs font-semibold transition-all
-                                                    ${paymentStatusTab === tab.value
-                                                        ? 'bg-emerald-600 text-white shadow-md shadow-emerald-200'
-                                                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                                        ? 'border-blue-600 text-blue-600'
+                                                        : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
                                                     }
                                                 `}
                                             >
@@ -197,23 +172,51 @@ export default function TransactionList() {
                                     </div>
                                 </div>
                             </div>
-                        )}
 
-                        {/* Search */}
-                        <div className="relative">
-                            <MagnifyingGlass
-                                size={20}
-                                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
-                            />
-                            <input
-                                type="text"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder={mainTab === 'pemasukan' ? "Cari nomor, nama, atau HP..." : "Cari keterangan atau kategori..."}
-                                className="w-full h-10 pl-10 pr-3 border border-slate-300 rounded text-sm"
-                            />
+                            {/* Status Pembayaran Tabs */}
+                            <div>
+                                <h3 className="text-center text-sm font-semibold text-slate-500 mb-3">Status Pembayaran</h3>
+                                <div className="flex justify-center border-b border-slate-200 overflow-x-auto">
+                                    <div className="flex space-x-2">
+                                        {[
+                                            { value: 'semua', label: 'Semua' },
+                                            { value: 'lunas', label: 'Lunas' },
+                                            { value: 'belum_lunas', label: 'Belum Lunas' },
+                                        ].map((tab) => (
+                                            <button
+                                                key={tab.value}
+                                                onClick={() => setPaymentStatusTab(tab.value)}
+                                                className={`
+                                                    px-4 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap
+                                                    ${paymentStatusTab === tab.value
+                                                        ? 'border-emerald-600 text-emerald-600'
+                                                        : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+                                                    }
+                                                `}
+                                            >
+                                                {tab.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </Card>
+                    )}
+
+                    {/* Search */}
+                    <div className="relative mb-6">
+                        <MagnifyingGlass
+                            size={20}
+                            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                        />
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder={mainTab === 'pemasukan' ? "Cari nomor, nama, atau HP..." : "Cari keterangan atau kategori..."}
+                            className="w-full h-11 pl-10 pr-3 bg-white border border-slate-300 rounded-lg text-sm shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow"
+                        />
+                    </div>
 
                     {/* Content Area */}
                     {loading ? (
