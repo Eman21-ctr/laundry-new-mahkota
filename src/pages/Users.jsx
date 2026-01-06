@@ -156,7 +156,7 @@ export default function Users() {
                                 }`}
                         >
                             <Storefront size={20} />
-                            Toko & Harga
+                            Layanan
                         </button>
                         <button
                             onClick={() => setActiveTab('users')}
@@ -166,7 +166,7 @@ export default function Users() {
                                 }`}
                         >
                             <UsersIcon size={20} />
-                            Kelola Staff
+                            Pengaturan
                         </button>
                     </div>
 
@@ -177,18 +177,23 @@ export default function Users() {
                                     <div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full"></div>
                                 </div>
                             ) : (
-                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                                    <div className="lg:col-span-1">
-                                        <AppInfoForm settings={appSettings} onUpdate={fetchSettings} />
-                                    </div>
-                                    <div className="lg:col-span-2">
-                                        <PriceSettingsTable priceSettings={priceSettings} onUpdate={fetchSettings} />
-                                    </div>
-                                </div>
+                                <PriceSettingsTable priceSettings={priceSettings} onUpdate={fetchSettings} />
                             )}
                         </div>
                     ) : (
                         <>
+                            {/* Business Info */}
+                            <div className="mb-8">
+                                {settingsLoading ? (
+                                    <div className="flex justify-center py-12">
+                                        <div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full"></div>
+                                    </div>
+                                ) : (
+                                    <AppInfoForm settings={appSettings} onUpdate={fetchSettings} />
+                                )}
+                            </div>
+
+                            {/* Staff Management */}
                             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                                 <div>
                                     <h2 className="text-xl font-bold text-slate-900">Kelola Pengguna</h2>
