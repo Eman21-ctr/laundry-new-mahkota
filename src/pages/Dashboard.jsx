@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Receipt as ReceiptIcon, ChartLine } from 'phosphor-react';
+import { NotePencil, Wallet, ListChecks, ChartPieSlice } from 'phosphor-react';
 import useAuth from '../hooks/useAuth';
 import { getDashboardStats } from '../services/transactions';
 import { formatCurrency } from '../utils/formatters';
@@ -37,8 +37,10 @@ export default function Dashboard() {
     };
 
     const quickActions = [
-        { label: 'Daftar Transaksi', icon: ReceiptIcon, to: '/transactions' },
-        { label: 'Laporan', icon: ChartLine, to: '/reports' },
+        { label: 'Catat Transaksi', icon: NotePencil, to: '/new-transaction', color: 'bg-blue-50 text-blue-600' },
+        { label: 'Catat Pengeluaran', icon: Wallet, to: '/record-expense', color: 'bg-orange-50 text-orange-600' },
+        { label: 'Daftar Transaksi', icon: ListChecks, to: '/transactions', color: 'bg-green-50 text-green-600' },
+        { label: 'Laporan', icon: ChartPieSlice, to: '/reports', color: 'bg-purple-50 text-purple-600' },
     ];
 
     return (
@@ -53,21 +55,18 @@ export default function Dashboard() {
                     <div className="bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-b-[40px] shadow-lg overflow-hidden">
                         <Header transparent />
 
-                        <div className="max-w-4xl mx-auto px-6 pb-24 pt-4">
-                            <div className="mb-6">
-                                <h1 className="text-2xl font-bold">
+                        <div className="max-w-4xl mx-auto px-6 pb-20 pt-4">
+                            <div className="mb-4">
+                                <h1 className="text-xl font-bold">
                                     Selamat Datang, {user?.profile?.full_name?.split(' ')[0] || 'Bosku'}!
                                 </h1>
-                                <div className="text-blue-100 text-sm mt-1 leading-relaxed">
-                                    <p>Semoga harimu menyenangkan</p>
-                                    <p>dan bisnis makin lancar.</p>
-                                </div>
+                                <p className="text-blue-100 text-sm mt-1">Semoga bisnis makin lancar 🚀</p>
                             </div>
 
                             {/* Main KPI */}
-                            <div className="mt-8">
+                            <div className="mt-4">
                                 <p className="text-blue-200 text-xs uppercase tracking-wider font-semibold mb-1">Pendapatan Bulan Ini</p>
-                                <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight">
+                                <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight">
                                     {formatCurrency(stats.totalRevenue)}
                                 </h2>
                             </div>
@@ -75,31 +74,31 @@ export default function Dashboard() {
                     </div>
 
                     {/* Content Section (Overlapping) */}
-                    <Container className="-mt-16 pb-8 space-y-6">
+                    <Container className="-mt-12 pb-6 space-y-4">
                         {/* Thematic Illustration */}
                         <div className="max-w-4xl mx-auto">
-                            <Card className="overflow-hidden p-0 border-none shadow-xl rounded-[24px]">
+                            <Card className="overflow-hidden p-0 border-none shadow-xl rounded-2xl">
                                 <img
                                     src="/dashboard-banner.png"
                                     alt="Professional Laundry Management"
-                                    className="w-full h-32 md:h-48 object-cover"
+                                    className="w-full h-28 md:h-40 object-cover"
                                 />
                             </Card>
                         </div>
 
-                        {/* Compact Menu Grid */}
+                        {/* 2x2 Menu Grid */}
                         <div className="max-w-4xl mx-auto">
-                            <div className="grid grid-cols-2 gap-3 px-4">
+                            <div className="grid grid-cols-2 gap-3 px-2">
                                 {quickActions.map((action) => (
                                     <button
                                         key={action.to}
                                         onClick={() => navigate(action.to)}
-                                        className="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm group hover:shadow-md transition-all"
+                                        className="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
                                     >
-                                        <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                                            <action.icon size={20} weight="fill" />
+                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${action.color}`}>
+                                            <action.icon size={22} weight="fill" />
                                         </div>
-                                        <span className="text-sm font-semibold text-slate-700">
+                                        <span className="text-xs font-semibold text-slate-700 leading-tight">
                                             {action.label}
                                         </span>
                                     </button>

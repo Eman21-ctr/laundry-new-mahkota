@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { House, Receipt, Wallet, Gear } from 'phosphor-react';
+import { House, ChartPieSlice, GearSix } from 'phosphor-react';
 import useAuth from '../../hooks/useAuth';
 
 export default function Navigation() {
@@ -9,12 +9,11 @@ export default function Navigation() {
 
     const navItems = [
         { to: '/', label: 'Beranda', icon: House },
-        { to: '/new-transaction', label: 'Transaksi', icon: Receipt },
-        { to: '/record-expense', label: 'Pengeluaran', icon: Wallet },
+        { to: '/reports', label: 'Laporan', icon: ChartPieSlice },
     ];
 
     if (isOwner) {
-        navItems.push({ to: '/users', label: 'Pengaturan', icon: Gear });
+        navItems.push({ to: '/users', label: 'Pengaturan', icon: GearSix });
     }
 
     return (
@@ -34,7 +33,7 @@ export default function Navigation() {
                     >
                         {({ isActive }) => (
                             <>
-                                <item.icon size={24} weight={isActive ? 'fill' : 'regular'} />
+                                <item.icon size={24} weight="fill" />
                                 <span className="text-xs mt-1">{item.label}</span>
                             </>
                         )}
@@ -57,7 +56,7 @@ export default function Navigation() {
                     >
                         {({ isActive }) => (
                             <>
-                                <item.icon size={20} weight={isActive ? 'fill' : 'regular'} />
+                                <item.icon size={20} weight="fill" />
                                 <span className="font-medium">{item.label}</span>
                             </>
                         )}
