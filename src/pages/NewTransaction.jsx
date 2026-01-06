@@ -211,6 +211,13 @@ export default function NewTransaction() {
             const paidAmount = formData.paid_amount === '' ? total : (parseFloat(formData.paid_amount.toString().replace(',', '.')) || 0);
             const paymentMethod = paidAmount === 0 ? '-' : formData.payment_method;
 
+            const sanitizedItems = validItems.map(item => ({
+                ...item,
+                quantity: parseFloat(item.quantity.toString().replace(',', '.')) || 0,
+                unit_price: parseFloat(item.unit_price) || 0,
+                subtotal: parseFloat(item.subtotal) || 0
+            }));
+
             const transaction = await createTransaction(
                 {
                     customer_id: customer.id,
@@ -225,7 +232,7 @@ export default function NewTransaction() {
                     date_out: estimatedDate.toISOString(),
                     created_by: user.id,
                 },
-                validItems
+                sanitizedItems
             );
 
             setCreatedTransaction(transaction);
