@@ -38,9 +38,9 @@ export default function Dashboard() {
 
     const quickActions = [
         { label: 'Catat Transaksi', icon: NotePencil, to: '/new-transaction', color: 'bg-blue-50 text-blue-600' },
-        { label: 'Catat Pengeluaran', icon: Wallet, to: '/record-expense', color: 'bg-orange-50 text-orange-600' },
-        { label: 'Daftar Transaksi', icon: ListChecks, to: '/transactions', color: 'bg-green-50 text-green-600', state: { defaultTab: 'pemasukan' } },
-        { label: 'Daftar Pengeluaran', icon: Receipt, to: '/transactions', color: 'bg-purple-50 text-purple-600', state: { defaultTab: 'pengeluaran' } },
+        { label: 'Catat Pengeluaran', icon: Wallet, to: '/record-expense', color: 'bg-blue-50 text-blue-600' },
+        { label: 'Daftar Transaksi', icon: ListChecks, to: '/transactions', color: 'bg-blue-50 text-blue-600', state: { defaultTab: 'pemasukan' } },
+        { label: 'Daftar Pengeluaran', icon: Receipt, to: '/transactions', color: 'bg-blue-50 text-blue-600', state: { defaultTab: 'pengeluaran' } },
     ];
 
     return (
