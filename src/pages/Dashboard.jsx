@@ -73,15 +73,15 @@ export default function Dashboard() {
                         </div>
                     </div>
 
-                    {/* Content Section (Overlapping) */}
-                    <Container className="-mt-8 pb-4 space-y-3">
+                    {/* Content Section (Minimal Overlap) */}
+                    <Container className="-mt-4 pb-4 space-y-3">
                         {/* Thematic Illustration */}
                         <div className="max-w-4xl mx-auto">
                             <Card className="overflow-hidden p-0 border-none shadow-lg rounded-xl">
                                 <img
                                     src="/dashboard-banner.png"
                                     alt="Professional Laundry Management"
-                                    className="w-full h-24 md:h-36 object-cover"
+                                    className="w-full h-28 md:h-40 object-cover"
                                 />
                             </Card>
                         </div>
