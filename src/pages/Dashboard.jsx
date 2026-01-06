@@ -74,20 +74,20 @@ export default function Dashboard() {
                     </div>
 
                     {/* Content Section (Minimal Overlap) */}
-                    <Container className="-mt-9 pb-4 space-y-3">
+                    <Container className="-mt-14 pb-4 space-y-3">
                         {/* Thematic Illustration */}
                         <div className="max-w-4xl mx-auto">
                             <Card className="overflow-hidden p-0 border-none shadow-lg rounded-xl">
                                 <img
                                     src="/dashboard-banner.png"
                                     alt="Professional Laundry Management"
-                                    className="w-full h-auto"
+                                    className="w-full h-48 object-cover object-top"
                                 />
                             </Card>
                         </div>
 
                         {/* 2x2 Menu Grid */}
-                        <div className="max-w-4xl mx-auto mt-6">
+                        <div className="max-w-4xl mx-auto -mt-8">
                             <div className="grid grid-cols-2 gap-2 px-1">
                                 {quickActions.map((action) => (
                                     <button
