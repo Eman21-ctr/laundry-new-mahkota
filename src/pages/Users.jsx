@@ -11,9 +11,11 @@ import AppInfoForm from '../components/settings/AppInfoForm';
 import PriceSettingsTable from '../components/settings/PriceSettingsTable';
 import { getUsers, createUser, updateUser, deleteUser, toggleUserStatus } from '../services/users';
 import { getAppSettings, getPriceSettings } from '../services/settings';
-import { Plus, User, Storefront, ArrowLeft } from 'phosphor-react';
+import { Plus, User, Storefront, ArrowLeft, Power } from 'phosphor-react';
+import useAuth from '../hooks/useAuth';
 
 export default function Users() {
+    const { user, signOut } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const [users, setUsers] = useState([]);
@@ -21,6 +23,13 @@ export default function Users() {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [actionLoading, setActionLoading] = useState(false);
+
+    const handleLogout = async () => {
+        if (window.confirm('Yakin ingin keluar aplikasi?')) {
+            await signOut();
+            navigate('/login');
+        }
+    };
 
     // Check URL params for active tab
     const queryParams = new URLSearchParams(location.search);
@@ -216,6 +225,17 @@ export default function Users() {
                                 onToggleStatus={handleToggleStatus}
                                 onDelete={handleDeleteUser}
                             />
+
+                            {/* Logout Area */}
+                            <div className="mt-12 pt-6 border-t border-slate-200 flex justify-center pb-8">
+                                <button
+                                    onClick={handleLogout}
+                                    className="flex items-center gap-2 px-6 py-2.5 bg-red-50 text-red-600 rounded-full font-semibold hover:bg-red-100 transition-colors border border-red-100 shadow-sm"
+                                >
+                                    <Power size={20} weight="bold" />
+                                    Keluar dari Aplikasi
+                                </button>
+                            </div>
                         </>
                     )}
                 </div>
