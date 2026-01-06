@@ -16,7 +16,7 @@ export default function PriceSettingsTable({ priceSettings, onUpdate }) {
         item_type: '',
         item_label: '',
         price: '',
-        unit: 'kg',
+        unit: '',
         duration_days: ''
     });
 
@@ -35,7 +35,7 @@ export default function PriceSettingsTable({ priceSettings, onUpdate }) {
             });
             onUpdate();
             setShowCreateModal(false);
-            setNewService({ item_type: '', item_label: '', price: '', unit: 'kg', duration_days: '' });
+            setNewService({ item_type: '', item_label: '', price: '', unit: '', duration_days: '' });
         } catch (error) {
             console.error('Error creating service:', error);
             alert('Gagal menambah layanan');
@@ -222,18 +222,13 @@ export default function PriceSettingsTable({ priceSettings, onUpdate }) {
                             value={newService.price}
                             onChange={(e) => setNewService({ ...newService, price: e.target.value })}
                         />
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">Satuan</label>
-                            <select
-                                className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary-500"
-                                value={newService.unit}
-                                onChange={(e) => setNewService({ ...newService, unit: e.target.value })}
-                            >
-                                <option value="kg">Per Kg</option>
-                                <option value="pcs">Per Pcs</option>
-                                <option value="m2">Per Meter²</option>
-                            </select>
-                        </div>
+                        <Input
+                            label="Satuan"
+                            placeholder="kg, pcs, <10 kg, dll."
+                            required
+                            value={newService.unit}
+                            onChange={(e) => setNewService({ ...newService, unit: e.target.value })}
+                        />
                     </div>
 
                     <Input
