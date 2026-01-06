@@ -7,6 +7,7 @@ export default function ItemBreakdown({ breakdown }) {
         label: key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
         quantity: data.quantity,
         subtotal: data.subtotal,
+        unit: data.unit || '',
     })).sort((a, b) => b.subtotal - a.subtotal);
 
     if (items.length === 0) {
@@ -28,7 +29,7 @@ export default function ItemBreakdown({ breakdown }) {
                     <div key={index} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                         <div>
                             <p className="text-sm font-semibold text-slate-700">{item.label}</p>
-                            <p className="text-xs text-slate-500">{item.quantity} transaksi</p>
+                            <p className="text-xs text-slate-500">{item.quantity} {item.unit}</p>
                         </div>
                         <div className="text-right">
                             <p className="text-sm font-bold text-slate-900">{formatCurrency(item.subtotal)}</p>

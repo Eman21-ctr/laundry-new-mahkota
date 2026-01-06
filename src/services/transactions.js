@@ -258,6 +258,7 @@ export async function getReportStats(startDate, endDate) {
                 itemTypeBreakdown[item.item_type] = {
                     quantity: 0,
                     subtotal: 0,
+                    unit: item.unit,
                 };
             }
             itemTypeBreakdown[item.item_type].quantity += parseFloat(item.quantity);

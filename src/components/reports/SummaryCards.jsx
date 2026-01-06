@@ -30,7 +30,7 @@ export default function SummaryCards({ stats }) {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {cards.map((card, index) => (
                 <div key={index} className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
-                    <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
+                    <div className="text-xs font-semibold text-slate-500 tracking-wider mb-1">
                         {card.label}
                     </div>
                     <div className={`text-lg md:text-xl font-bold ${card.variant}`}>
