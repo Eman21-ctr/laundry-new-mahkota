@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Trash } from 'phosphor-react';
+import { Plus, Trash, PencilSimple, Check, X } from 'phosphor-react';
 import Button from '../ui/Button';
 import Input from '../ui/Input';
 import Modal from '../ui/Modal';
@@ -96,86 +96,98 @@ export default function PriceSettingsTable({ priceSettings, onUpdate }) {
     return (
         <>
             <div className="bg-white rounded-lg border border-slate-200 overflow-hidden">
-                <div className="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                <div className="p-3 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
                     <div>
-                        <h2 className="text-lg font-bold text-slate-900">Pengaturan Harga</h2>
-                        <p className="text-xs text-slate-500">Atur harga per unit dan estimasi durasi pengerjaan</p>
+                        <h2 className="text-base font-bold text-slate-900">Pengaturan Harga</h2>
+                        <p className="text-xs text-slate-500">Atur harga dan durasi layanan</p>
                     </div>
                     <Button size="sm" onClick={() => setShowCreateModal(true)}>
-                        <Plus size={18} weight="bold" />
-                        Tambah Layanan
+                        <Plus size={16} weight="bold" />
+                        <span className="hidden sm:inline ml-1">Tambah</span>
                     </Button>
                 </div>
 
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm">
+                    <table className="w-full text-left text-xs">
                         <thead className="bg-slate-50 border-b border-slate-200">
                             <tr>
-                                <th className="px-4 py-3 font-semibold text-slate-600 uppercase tracking-wider">Layanan</th>
-                                <th className="px-4 py-3 font-semibold text-slate-600 uppercase tracking-wider text-right">Harga (Rp)</th>
-                                <th className="px-4 py-3 font-semibold text-slate-600 uppercase tracking-wider text-center">Durasi (Hari)</th>
-                                <th className="px-4 py-3 font-semibold text-slate-600 uppercase tracking-wider text-right">Aksi</th>
+                                <th className="px-2 py-2 font-semibold text-slate-600">Layanan</th>
+                                <th className="px-2 py-2 font-semibold text-slate-600 text-right">Harga</th>
+                                <th className="px-2 py-2 font-semibold text-slate-600 text-center">Hari</th>
+                                <th className="px-2 py-2 font-semibold text-slate-600 text-center w-16"></th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-200">
+                        <tbody className="divide-y divide-slate-100">
                             {priceSettings.map((setting) => (
                                 <tr key={setting.id} className="hover:bg-slate-50 transition-colors">
-                                    <td className="px-4 py-3">
-                                        <div className="font-medium text-slate-900">{setting.item_label}</div>
-                                        <div className="text-xs text-slate-500 capitalize">Unit: {setting.unit}</div>
+                                    <td className="px-2 py-2">
+                                        <div className="font-medium text-slate-900 text-sm">{setting.item_label}</div>
+                                        <div className="text-[10px] text-slate-400">/{setting.unit}</div>
                                     </td>
-                                    <td className="px-4 py-3 text-right">
+                                    <td className="px-2 py-2 text-right">
                                         {editingId === setting.id ? (
-                                            <Input
+                                            <input
                                                 type="number"
                                                 name="price"
                                                 value={editValues.price}
                                                 onChange={handleChange}
-                                                className="text-right h-8"
-                                                containerClassName="w-24 ml-auto"
+                                                className="w-20 text-right text-xs px-1 py-0.5 border border-slate-300 rounded"
                                             />
                                         ) : (
-                                            <span className="font-mono">{parseFloat(setting.price).toLocaleString('id-ID')}</span>
+                                            <span className="font-mono text-sm">{parseFloat(setting.price).toLocaleString('id-ID')}</span>
                                         )}
                                     </td>
-                                    <td className="px-4 py-3 text-center">
+                                    <td className="px-2 py-2 text-center">
                                         {editingId === setting.id ? (
-                                            <Input
+                                            <input
                                                 type="number"
                                                 name="duration_days"
                                                 value={editValues.duration_days}
                                                 onChange={handleChange}
-                                                className="text-center h-8"
-                                                containerClassName="w-16 mx-auto"
-                                                placeholder="N/A"
+                                                placeholder="-"
+                                                className="w-12 text-center text-xs px-1 py-0.5 border border-slate-300 rounded"
                                             />
                                         ) : (
-                                            <span>{setting.duration_days || '-'}</span>
+                                            <span className="text-sm">{setting.duration_days || '-'}</span>
                                         )}
                                     </td>
-                                    <td className="px-4 py-3 text-right">
+                                    <td className="px-2 py-2 text-center">
                                         {editingId === setting.id ? (
-                                            <div className="flex justify-end gap-2">
-                                                <Button variant="ghost" size="sm" onClick={handleCancel} disabled={loading} className="text-slate-500">
-                                                    Batal
-                                                </Button>
-                                                <Button variant="primary" size="sm" onClick={() => handleSave(setting.id)} loading={loading}>
-                                                    Ok
-                                                </Button>
+                                            <div className="flex justify-center gap-1">
+                                                <button
+                                                    onClick={handleCancel}
+                                                    disabled={loading}
+                                                    className="p-1 text-slate-400 hover:text-slate-600 transition-colors"
+                                                    title="Batal"
+                                                >
+                                                    <X size={16} />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleSave(setting.id)}
+                                                    disabled={loading}
+                                                    className="p-1 text-green-500 hover:text-green-700 transition-colors"
+                                                    title="Simpan"
+                                                >
+                                                    <Check size={16} weight="bold" />
+                                                </button>
                                             </div>
                                         ) : (
-                                            <Button variant="secondary" size="sm" onClick={() => handleEdit(setting)}>
-                                                Ubah
-                                            </Button>
-                                        )}
-                                        {editingId !== setting.id && (
-                                            <button
-                                                onClick={() => handleDelete(setting.id, setting.item_label)}
-                                                className="ml-2 p-1 text-red-400 hover:text-red-600 transition-colors"
-                                                title="Hapus Layanan"
-                                            >
-                                                <Trash size={18} />
-                                            </button>
+                                            <div className="flex justify-center gap-1">
+                                                <button
+                                                    onClick={() => handleEdit(setting)}
+                                                    className="p-1 text-blue-400 hover:text-blue-600 transition-colors"
+                                                    title="Edit"
+                                                >
+                                                    <PencilSimple size={16} />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(setting.id, setting.item_label)}
+                                                    className="p-1 text-red-400 hover:text-red-600 transition-colors"
+                                                    title="Hapus"
+                                                >
+                                                    <Trash size={16} />
+                                                </button>
+                                            </div>
                                         )}
                                     </td>
                                 </tr>
