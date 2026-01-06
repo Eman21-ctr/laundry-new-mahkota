@@ -23,37 +23,26 @@ export default function ItemBreakdown({ breakdown }) {
                 <h2 className="text-sm font-bold text-slate-900">Rincian per Layanan</h2>
             </div>
 
-            <table className="w-full text-left text-sm">
-                <thead className="bg-slate-50 border-b border-slate-200">
-                    <tr>
-                        <th className="px-4 py-2 font-semibold text-slate-600">Layanan</th>
-                        <th className="px-4 py-2 font-semibold text-slate-600 text-right">Qty</th>
-                        <th className="px-4 py-2 font-semibold text-slate-600 text-right">Pendapatan</th>
-                    </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                    {items.map((item, index) => (
-                        <tr key={index} className="hover:bg-slate-50 transition-colors">
-                            <td className="px-4 py-2 text-slate-700">{item.label}</td>
-                            <td className="px-4 py-2 text-right text-slate-600">{item.quantity}</td>
-                            <td className="px-4 py-2 text-right font-medium text-slate-900">
-                                {formatCurrency(item.subtotal)}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-                <tfoot className="bg-slate-50 font-bold">
-                    <tr>
-                        <td className="px-4 py-2 text-slate-900">Total</td>
-                        <td className="px-4 py-2 text-right text-slate-900">
-                            {items.reduce((sum, item) => sum + item.quantity, 0)}
-                        </td>
-                        <td className="px-4 py-2 text-right text-primary-600">
-                            {formatCurrency(items.reduce((sum, item) => sum + item.subtotal, 0))}
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
+            <div className="divide-y divide-slate-100">
+                {items.map((item, index) => (
+                    <div key={index} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                        <div>
+                            <p className="text-sm font-semibold text-slate-700">{item.label}</p>
+                            <p className="text-xs text-slate-500">{item.quantity} transaksi</p>
+                        </div>
+                        <div className="text-right">
+                            <p className="text-sm font-bold text-slate-900">{formatCurrency(item.subtotal)}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <div className="bg-slate-50 p-4 border-t border-slate-200 flex justify-between items-center">
+                <span className="font-bold text-slate-900 text-sm">Total</span>
+                <span className="font-bold text-primary-600 text-sm">
+                    {formatCurrency(items.reduce((sum, item) => sum + item.subtotal, 0))}
+                </span>
+            </div>
         </div>
     );
 }

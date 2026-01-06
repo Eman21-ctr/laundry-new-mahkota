@@ -168,51 +168,8 @@ export default function Reports() {
                         <div className="space-y-6">
                             <SummaryCards stats={stats} />
 
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                                <div className="lg:col-span-1">
-                                    <ItemBreakdown breakdown={stats.itemTypeBreakdown} />
-                                </div>
-                                <div className="lg:col-span-2 space-y-4">
-                                    <div className="bg-white p-4 rounded-lg border border-slate-200 h-full">
-                                        <div className="flex items-center justify-between mb-4">
-                                            <h2 className="text-sm font-bold text-slate-900">Daftar Transaksi Terakhir</h2>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="text-primary-600"
-                                                onClick={() => {
-                                                    if (!stats?.transactions?.length) return;
-                                                    const headers = ['No. Transaksi', 'Pelanggan', 'HP', 'Status', 'Total', 'Bayar', 'Tgl Masuk'];
-                                                    const rows = stats.transactions.map(t => [
-                                                        t.transaction_number,
-                                                        t.customer_name,
-                                                        t.customer_phone,
-                                                        t.status,
-                                                        t.total_amount,
-                                                        t.paid_amount,
-                                                        new Date(t.date_in).toLocaleDateString()
-                                                    ]);
-                                                    const csvContent = [headers, ...rows].map(e => e.join(',')).join('\n');
-                                                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-                                                    const url = URL.createObjectURL(blob);
-                                                    const link = document.createElement('a');
-                                                    link.setAttribute('href', url);
-                                                    link.setAttribute('download', `laporan-laundry-${dateRange.start}-ke-${dateRange.end}.csv`);
-                                                    link.style.visibility = 'hidden';
-                                                    document.body.appendChild(link);
-                                                    link.click();
-                                                    document.body.removeChild(link);
-                                                }}
-                                            >
-                                                <FileArrowDown size={18} /> Ekspor CSV
-                                            </Button>
-                                        </div>
-                                        <div className="text-center py-12 text-slate-400 text-sm">
-                                            Daftar rincian transaksi ditampilkan di menu Transaksi.<br />
-                                            Gunakan filter di menu tersebut untuk rincian data lebih lengkap.
-                                        </div>
-                                    </div>
-                                </div>
+                            <div className="space-y-6">
+                                <ItemBreakdown breakdown={stats.itemTypeBreakdown} />
                             </div>
                         </div>
                     ) : null}
