@@ -81,7 +81,7 @@ export default function Dashboard() {
                                 <img
                                     src="/dashboard-banner.png"
                                     alt="Professional Laundry Management"
-                                    className="w-full h-36 object-cover object-top"
+                                    className="w-full h-[200px] object-cover object-top"
                                 />
                             </Card>
                         </div>
