@@ -11,7 +11,7 @@ import AppInfoForm from '../components/settings/AppInfoForm';
 import PriceSettingsTable from '../components/settings/PriceSettingsTable';
 import { getUsers, createUser, updateUser, deleteUser, toggleUserStatus } from '../services/users';
 import { getAppSettings, getPriceSettings } from '../services/settings';
-import { Plus, Users as UsersIcon, Storefront, ArrowLeft } from 'phosphor-react';
+import { Plus, User, Storefront, ArrowLeft } from 'phosphor-react';
 
 export default function Users() {
     const navigate = useNavigate();
@@ -165,8 +165,8 @@ export default function Users() {
                                 : 'border-transparent text-slate-500 hover:text-slate-700'
                                 }`}
                         >
-                            <UsersIcon size={20} />
-                            Pengaturan
+                            <User size={20} />
+                            Pengguna
                         </button>
                     </div>
 

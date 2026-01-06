@@ -86,26 +86,6 @@ export default function Dashboard() {
                                 />
                             </Card>
                         </div>
-
-                        {/* Menu Grid - Only 2 items, larger */}
-                        <div className="max-w-4xl mx-auto">
-                            <div className="grid grid-cols-2 gap-4 px-6 py-4">
-                                {quickActions.map((action) => (
-                                    <button
-                                        key={action.to}
-                                        onClick={() => navigate(action.to)}
-                                        className="flex flex-col items-center gap-3 p-6 bg-white rounded-3xl shadow-md group hover:shadow-lg transition-all"
-                                    >
-                                        <div className="w-20 h-20 md:w-24 md:h-24 rounded-3xl flex items-center justify-center transition-all duration-200 bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-active:scale-95">
-                                            <action.icon size={40} weight="fill" />
-                                        </div>
-                                        <span className="text-sm md:text-base font-bold text-slate-700 text-center">
-                                            {action.label}
-                                        </span>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
                     </Container>
                 </div>
             </div>
