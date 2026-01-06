@@ -61,3 +61,29 @@ export async function updatePriceSetting(id, updates) {
     if (error) throw error;
     return data;
 }
+
+/**
+ * Create new price setting
+ */
+export async function createPriceSetting(data) {
+    const { data: newSetting, error } = await supabase
+        .from('price_settings')
+        .insert(data)
+        .select()
+        .single();
+
+    if (error) throw error;
+    return newSetting;
+}
+
+/**
+ * Delete price setting
+ */
+export async function deletePriceSetting(id) {
+    const { error } = await supabase
+        .from('price_settings')
+        .delete()
+        .eq('id', id);
+
+    if (error) throw error;
+}
