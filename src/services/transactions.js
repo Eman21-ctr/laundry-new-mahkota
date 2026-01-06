@@ -48,32 +48,57 @@ export async function getTransactionById(id) {
 }
 
 /**
- * Get today's stats
+ * Get dashboard stats (Monthly Revenue, Today's Transactions, Active Orders)
  */
-export async function getTodayStats() {
+export async function getDashboardStats() {
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+    // Reset time for start of day
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    const startOfDay = today.toISOString();
 
     const endOfDay = new Date();
     endOfDay.setHours(23, 59, 59, 999);
+    const endOfDayISO = endOfDay.toISOString();
 
-    const { data, error } = await supabase
-        .from('transactions')
-        .select('*')
-        .gte('date_in', today.toISOString())
-        .lte('date_in', endOfDay.toISOString());
+    try {
+        // 1. Monthly Revenue
+        const { data: monthData, error: monthError } = await supabase
+            .from('transactions')
+            .select('total_amount')
+            .gte('date_in', startOfMonth);
 
-    if (error) throw error;
+        if (monthError) throw monthError;
+        const monthlyRevenue = monthData.reduce((sum, t) => sum + (parseFloat(t.total_amount) || 0), 0);
 
-    const totalTransactions = data.length;
-    const totalRevenue = data.reduce((sum, t) => sum + parseFloat(t.total_amount), 0);
-    const activeOrders = data.filter(t => t.status === 'proses' || t.status === 'selesai').length;
+        // 2. Today's Transactions Count
+        const { count: todayCount, error: todayError } = await supabase
+            .from('transactions')
+            .select('*', { count: 'exact', head: true })
+            .gte('date_in', startOfDay)
+            .lte('date_in', endOfDayISO);
 
-    return {
-        totalTransactions,
-        totalRevenue,
-        activeOrders,
-    };
+        if (todayError) throw todayError;
+
+        // 3. All Active Orders (Proses or Selesai)
+        const { count: activeCount, error: activeError } = await supabase
+            .from('transactions')
+            .select('*', { count: 'exact', head: true })
+            .in('status', ['proses', 'selesai']);
+
+        if (activeError) throw activeError;
+
+        return {
+            totalTransactions: todayCount || 0,
+            totalRevenue: monthlyRevenue,
+            activeOrders: activeCount || 0,
+        };
+    } catch (error) {
+        console.error('Error fetching dashboard stats:', error);
+        throw error;
+    }
 }
 
 /**

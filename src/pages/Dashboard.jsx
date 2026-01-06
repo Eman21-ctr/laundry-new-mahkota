@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Receipt as ReceiptIcon, ChartLine, Gear, Users, TrendUp, Package, Wallet } from 'phosphor-react';
 import useAuth from '../hooks/useAuth';
-import { getTodayStats } from '../services/transactions';
+import { getDashboardStats } from '../services/transactions';
 import { formatCurrency } from '../utils/formatters';
 import Header from '../components/layout/Header';
 import Navigation from '../components/layout/Navigation';
@@ -31,8 +31,8 @@ export default function Dashboard() {
     const loadDashboardData = async () => {
         try {
             setLoading(true);
-            const todayStats = await getTodayStats();
-            setStats(todayStats);
+            const dashboardStats = await getDashboardStats();
+            setStats(dashboardStats);
         } catch (error) {
             console.error('Error loading dashboard:', error);
         } finally {
