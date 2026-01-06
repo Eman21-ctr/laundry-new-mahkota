@@ -178,7 +178,10 @@ export default function NewTransaction() {
             newErrors.customer_phone = 'Nomor HP tidak valid (gunakan format 08xx atau 628xx)';
         }
 
-        const validItems = items.filter(item => item.item_type && item.quantity > 0);
+        const validItems = items.filter(item => {
+            const qty = parseFloat(item.quantity.toString().replace(',', '.')) || 0;
+            return item.item_type && qty > 0;
+        });
         if (validItems.length === 0) {
             newErrors.items = 'Minimal harus ada 1 item';
         }
@@ -198,7 +201,10 @@ export default function NewTransaction() {
                 formData.customer_phone.trim()
             );
 
-            const validItems = items.filter(item => item.item_type && item.quantity > 0);
+            const validItems = items.filter(item => {
+                const qty = parseFloat(item.quantity.toString().replace(',', '.')) || 0;
+                return item.item_type && qty > 0;
+            });
             const total = calculateTotal();
             const estimatedDate = calculateEstimatedDate();
 
