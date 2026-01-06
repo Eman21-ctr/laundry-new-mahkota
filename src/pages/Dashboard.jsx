@@ -78,13 +78,33 @@ export default function Dashboard() {
                     <Container className="-mt-16 pb-8 space-y-6">
                         {/* Thematic Illustration */}
                         <div className="max-w-4xl mx-auto">
-                            <Card className="overflow-hidden p-0 border-none shadow-xl rounded-[32px]">
+                            <Card className="overflow-hidden p-0 border-none shadow-xl rounded-[24px]">
                                 <img
                                     src="/dashboard-banner.png"
                                     alt="Professional Laundry Management"
-                                    className="w-full h-48 md:h-64 object-cover"
+                                    className="w-full h-32 md:h-48 object-cover"
                                 />
                             </Card>
+                        </div>
+
+                        {/* Compact Menu Grid */}
+                        <div className="max-w-4xl mx-auto">
+                            <div className="grid grid-cols-2 gap-3 px-4">
+                                {quickActions.map((action) => (
+                                    <button
+                                        key={action.to}
+                                        onClick={() => navigate(action.to)}
+                                        className="flex items-center gap-3 p-3 bg-white rounded-xl shadow-sm group hover:shadow-md transition-all"
+                                    >
+                                        <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                            <action.icon size={20} weight="fill" />
+                                        </div>
+                                        <span className="text-sm font-semibold text-slate-700">
+                                            {action.label}
+                                        </span>
+                                    </button>
+                                ))}
+                            </div>
                         </div>
                     </Container>
                 </div>
