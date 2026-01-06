@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Receipt as ReceiptIcon, ChartLine, Gear, Users, TrendUp, Package, Wallet } from 'phosphor-react';
+import { Receipt as ReceiptIcon, ChartLine } from 'phosphor-react';
 import useAuth from '../hooks/useAuth';
 import { getDashboardStats } from '../services/transactions';
 import { formatCurrency } from '../utils/formatters';
@@ -8,14 +8,10 @@ import Header from '../components/layout/Header';
 import Navigation from '../components/layout/Navigation';
 import Container from '../components/layout/Container';
 import Card from '../components/ui/Card';
-import Button from '../components/ui/Button';
-import Badge from '../components/ui/Badge';
-import IconBox from '../components/ui/IconBox';
 
 export default function Dashboard() {
     const { user } = useAuth();
     const navigate = useNavigate();
-    const isOwner = user?.profile?.is_owner;
 
     const [stats, setStats] = useState({
         totalTransactions: 0,
@@ -41,19 +37,9 @@ export default function Dashboard() {
     };
 
     const quickActions = [
-        { label: 'Transaksi Baru', icon: Plus, to: '/new-transaction' },
         { label: 'Daftar Transaksi', icon: ReceiptIcon, to: '/transactions' },
-        { label: 'Catat Pengeluaran', icon: Wallet, to: '/record-expense' },
         { label: 'Laporan', icon: ChartLine, to: '/reports' },
     ];
-
-    // Add Owner-specific actions
-    if (isOwner) {
-        quickActions.push(
-            { label: 'Kelola Staff', icon: Users, to: '/users?tab=users' },
-            { label: 'Pengaturan', icon: Gear, to: '/users?tab=settings' }
-        );
-    }
 
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
@@ -101,46 +87,24 @@ export default function Dashboard() {
                             </Card>
                         </div>
 
-                        {/* Menu Grid - Standardized & Proportional */}
+                        {/* Menu Grid - Only 2 items, larger */}
                         <div className="max-w-4xl mx-auto">
-                            <div className="grid grid-cols-3 gap-y-8 gap-x-2 px-6 py-4">
+                            <div className="grid grid-cols-2 gap-4 px-6 py-4">
                                 {quickActions.map((action) => (
                                     <button
                                         key={action.to}
                                         onClick={() => navigate(action.to)}
-                                        className="flex flex-col items-center gap-2 group"
+                                        className="flex flex-col items-center gap-3 p-6 bg-white rounded-3xl shadow-md group hover:shadow-lg transition-all"
                                     >
-                                        <div className="w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center transition-all duration-200 shadow-sm bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-active:scale-95">
-                                            <action.icon size={28} weight="fill" />
+                                        <div className="w-20 h-20 md:w-24 md:h-24 rounded-3xl flex items-center justify-center transition-all duration-200 bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white group-active:scale-95">
+                                            <action.icon size={40} weight="fill" />
                                         </div>
-                                        <span className="text-[10px] md:text-xs font-bold text-slate-600 text-center leading-tight">
+                                        <span className="text-sm md:text-base font-bold text-slate-700 text-center">
                                             {action.label}
                                         </span>
                                     </button>
                                 ))}
                             </div>
-                        </div>
-
-                        {/* Summary Cards (Quick Stats) */}
-                        <div className="max-w-4xl mx-auto grid grid-cols-2 gap-4">
-                            <Card className="p-5 flex items-center gap-4 rounded-3xl">
-                                <div className="w-12 h-12 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center">
-                                    <ReceiptIcon size={24} weight="bold" />
-                                </div>
-                                <div>
-                                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Transaksi</p>
-                                    <p className="text-xl font-extrabold text-slate-900">{stats.totalTransactions}</p>
-                                </div>
-                            </Card>
-                            <Card className="p-5 flex items-center gap-4 rounded-3xl">
-                                <div className="w-12 h-12 rounded-2xl bg-green-100 text-green-600 flex items-center justify-center">
-                                    <Package size={24} weight="bold" />
-                                </div>
-                                <div>
-                                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Aktif</p>
-                                    <p className="text-xl font-extrabold text-slate-900">{stats.activeOrders}</p>
-                                </div>
-                            </Card>
                         </div>
                     </Container>
                 </div>

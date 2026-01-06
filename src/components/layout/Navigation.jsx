@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { House, Receipt, Wallet, Users } from 'phosphor-react';
+import { House, Receipt, Wallet, Gear } from 'phosphor-react';
 import useAuth from '../../hooks/useAuth';
 
 export default function Navigation() {
@@ -13,15 +13,8 @@ export default function Navigation() {
         { to: '/record-expense', label: 'Pengeluaran', icon: Wallet },
     ];
 
-    // Add Pengguna for everyone? Wait, the user said "ditambah Pengguna".
-    // Usually only owner can see users, but maybe and settings.
-    // Let's keep it for owner or check if they want it for everyone.
-    // "apakah Pengaturan bisa digabung ke dalam Pengguna sehingga di nav bar itu hanya 4 menu saja"
-    // I'll add it as 'Pengguna' and if it's owner-only then the nav-bar will have 3 for kasir.
-    // But usually Pengguna is for everyone to see their profile? 
-    // Usually owners manage users.
     if (isOwner) {
-        navItems.push({ to: '/users', label: 'Pengguna', icon: Users });
+        navItems.push({ to: '/users', label: 'Pengaturan', icon: Gear });
     }
 
     return (
