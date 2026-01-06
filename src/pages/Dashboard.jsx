@@ -74,7 +74,7 @@ export default function Dashboard() {
                     </div>
 
                     {/* Content Section (Minimal Overlap) */}
-                    <Container className="-mt-4 pb-4 space-y-3">
+                    <Container className="-mt-9 pb-4 space-y-3">
                         {/* Thematic Illustration */}
                         <div className="max-w-4xl mx-auto">
                             <Card className="overflow-hidden p-0 border-none shadow-lg rounded-xl">
@@ -87,7 +87,7 @@ export default function Dashboard() {
                         </div>
 
                         {/* 2x2 Menu Grid */}
-                        <div className="max-w-4xl mx-auto !mt-[100px]">
+                        <div className="max-w-4xl mx-auto mt-6">
                             <div className="grid grid-cols-2 gap-2 px-1">
                                 {quickActions.map((action) => (
                                     <button
