@@ -134,31 +134,17 @@ export default function TransactionList() {
                             <ArrowLeft size={24} weight="bold" />
                         </button>
                         <div>
-                            <h1 className="text-2xl font-bold">Daftar Transaksi</h1>
-                            <p className="text-blue-100 text-sm">Kelola pemasukan dan pengeluaran</p>
+                            <h1 className="text-2xl font-bold">
+                                {mainTab === 'pemasukan' ? 'Daftar Transaksi' : 'Daftar Pengeluaran'}
+                            </h1>
+                            <p className="text-blue-100 text-sm">
+                                {mainTab === 'pemasukan' ? 'Kelola pemasukan laundry' : 'Kelola pengeluaran operasional'}
+                            </p>
                         </div>
                     </div>
                 </div>
 
                 <div className="max-w-4xl mx-auto px-4 w-full">
-
-                    {/* Main Tabs (Pemasukan / Pengeluaran) */}
-                    <div className="flex mb-4 bg-white rounded-lg p-1 border border-slate-200 shadow-sm w-fit">
-                        <button
-                            onClick={() => { setMainTab('pemasukan'); setSearchQuery(''); }}
-                            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${mainTab === 'pemasukan' ? 'bg-primary-50 text-primary-600' : 'text-slate-600 hover:bg-slate-50'
-                                }`}
-                        >
-                            Pemasukan
-                        </button>
-                        <button
-                            onClick={() => { setMainTab('pengeluaran'); setSearchQuery(''); }}
-                            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${mainTab === 'pengeluaran' ? 'bg-primary-50 text-primary-600' : 'text-slate-600 hover:bg-slate-50'
-                                }`}
-                        >
-                            Pengeluaran
-                        </button>
-                    </div>
 
                     {/* Filter Bar */}
                     <Card className="mb-4">
