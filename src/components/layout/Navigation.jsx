@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { House, ChartPieSlice, GearSix } from 'phosphor-react';
+import { House, ChartBar, GearSix } from 'phosphor-react';
 import useAuth from '../../hooks/useAuth';
 
 export default function Navigation() {
@@ -9,7 +9,7 @@ export default function Navigation() {
 
     const navItems = [
         { to: '/', label: 'Beranda', icon: House },
-        { to: '/reports', label: 'Laporan', icon: ChartPieSlice },
+        { to: '/reports', label: 'Laporan', icon: ChartBar },
     ];
 
     if (isOwner) {
