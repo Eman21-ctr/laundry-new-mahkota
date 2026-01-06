@@ -147,7 +147,7 @@ export default function Users() {
                 <div className="max-w-4xl mx-auto px-4 w-full py-4">
 
                     {/* Tabs */}
-                    <div className="flex border-b border-slate-200 mb-6 overflow-x-auto">
+                    <div className="flex justify-center border-b border-slate-200 mb-6 overflow-x-auto">
                         <button
                             onClick={() => setActiveTab('settings')}
                             className={`flex items-center gap-2 px-6 py-3 border-b-2 transition-colors whitespace-nowrap ${activeTab === 'settings'
