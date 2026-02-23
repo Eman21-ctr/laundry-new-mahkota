@@ -33,9 +33,9 @@ export default function CustomerReport({ transactions }) {
             .map(s => ({
                 ...s,
                 averagePerTransaction: s.totalSpent / s.transactionCount,
-                // Sort transactions for this customer oldest to newest
+                // Sort transactions for this customer newest to oldest
                 sortedTransactions: [...s.transactions].sort((a, b) =>
-                    new Date(a.date_in) - new Date(b.date_in)
+                    new Date(b.date_in) - new Date(a.date_in)
                 )
             }))
             .sort((a, b) => b.totalSpent - a.totalSpent);
@@ -174,7 +174,7 @@ export default function CustomerReport({ transactions }) {
                                 </p>
                                 <div className="flex items-center justify-end gap-1 text-[11px]">
                                     <span className={`capitalize ${t.status === 'selesai' ? 'text-emerald-600' :
-                                            t.status === 'diambil' ? 'text-blue-600' : 'text-amber-600'
+                                        t.status === 'diambil' ? 'text-blue-600' : 'text-amber-600'
                                         }`}>
                                         {t.status}
                                     </span>

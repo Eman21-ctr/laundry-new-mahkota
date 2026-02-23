@@ -8,7 +8,7 @@ export async function getTransactions({ status, search, startDate, endDate, limi
     let query = supabase
         .from('transactions')
         .select('*, transaction_items(*)')
-        .order('created_at', { ascending: false });
+        .order('date_in', { ascending: false });
 
     if (status) {
         query = query.eq('status', status);
