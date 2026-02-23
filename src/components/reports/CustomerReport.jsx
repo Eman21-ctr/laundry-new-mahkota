@@ -1,9 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import { formatCurrency } from '../../utils/formatters';
-import { MagnifyingGlass, User, Receipt, TrendUp } from 'phosphor-react';
+import { MagnifyingGlass, User, Receipt, TrendUp, Calendar, Hash, Money } from 'phosphor-react';
+import Modal from '../ui/Modal';
+import { format } from 'date-fns';
+import { id } from 'date-fns/locale';
 
 export default function CustomerReport({ transactions }) {
     const [search, setSearch] = useState('');
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
 
     const customerStats = useMemo(() => {
         const stats = {};
@@ -17,16 +21,22 @@ export default function CustomerReport({ transactions }) {
                     phone: t.customer_phone,
                     totalSpent: 0,
                     transactionCount: 0,
+                    transactions: []
                 };
             }
             stats[customerId].totalSpent += parseFloat(t.total_amount);
             stats[customerId].transactionCount += 1;
+            stats[customerId].transactions.push(t);
         });
 
         return Object.values(stats)
             .map(s => ({
                 ...s,
-                averagePerTransaction: s.totalSpent / s.transactionCount
+                averagePerTransaction: s.totalSpent / s.transactionCount,
+                // Sort transactions for this customer oldest to newest
+                sortedTransactions: [...s.transactions].sort((a, b) =>
+                    new Date(a.date_in) - new Date(b.date_in)
+                )
             }))
             .sort((a, b) => b.totalSpent - a.totalSpent);
     }, [transactions]);
@@ -93,10 +103,14 @@ export default function CustomerReport({ transactions }) {
                                     </div>
                                 </td>
                                 <td className="p-4 text-center">
-                                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-medium">
+                                    <button
+                                        onClick={() => setSelectedCustomer(stat)}
+                                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-medium hover:bg-primary-100 hover:text-primary-600 transition-colors active:scale-95"
+                                        title="Klik untuk lihat daftar transaksi"
+                                    >
                                         <Receipt size={14} />
                                         {stat.transactionCount}
-                                    </div>
+                                    </button>
                                 </td>
                                 <td className="p-4 text-right">
                                     <p className="text-sm text-slate-600 font-medium">{formatCurrency(stat.averagePerTransaction)}</p>
@@ -129,6 +143,52 @@ export default function CustomerReport({ transactions }) {
                     {filteredStats.length} orang
                 </span>
             </div>
+
+            {/* Transaction Detail Modal */}
+            <Modal
+                isOpen={!!selectedCustomer}
+                onClose={() => setSelectedCustomer(null)}
+                title={`Histori Transaksi: ${selectedCustomer?.name}`}
+                size="lg"
+            >
+                <div className="divide-y divide-slate-100 max-h-[60vh] overflow-y-auto">
+                    {selectedCustomer?.sortedTransactions.map((t, idx) => (
+                        <div key={idx} className="py-3 flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-slate-50 rounded-lg text-slate-400">
+                                    <Calendar size={20} />
+                                </div>
+                                <div>
+                                    <p className="text-sm font-semibold text-slate-700">
+                                        {format(new Date(t.date_in), 'dd MMM yyyy HH:mm', { locale: id })}
+                                    </p>
+                                    <div className="flex items-center gap-1 text-[11px] text-slate-400">
+                                        <Hash size={10} />
+                                        <span>{t.transaction_number}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-sm font-bold text-slate-900">
+                                    {formatCurrency(t.total_amount)}
+                                </p>
+                                <div className="flex items-center justify-end gap-1 text-[11px]">
+                                    <span className={`capitalize ${t.status === 'selesai' ? 'text-emerald-600' :
+                                            t.status === 'diambil' ? 'text-blue-600' : 'text-amber-600'
+                                        }`}>
+                                        {t.status}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+                <div className="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center">
+                    <p className="text-xs text-slate-500 font-medium">TOTAL ({selectedCustomer?.transactionCount} Transaksi)</p>
+                    <p className="text-lg font-bold text-primary-600">{formatCurrency(selectedCustomer?.totalSpent || 0)}</p>
+                </div>
+            </Modal>
         </div>
     );
 }
+
