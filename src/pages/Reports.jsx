@@ -5,6 +5,7 @@ import Navigation from '../components/layout/Navigation';
 import Container from '../components/layout/Container';
 import SummaryCards from '../components/reports/SummaryCards';
 import ItemBreakdown from '../components/reports/ItemBreakdown';
+import CustomerReport from '../components/reports/CustomerReport';
 import { getReportStats } from '../services/transactions';
 import { getExpenseStats } from '../services/expenses';
 import { startOfMonth, endOfMonth, startOfToday, endOfToday, format, subDays, startOfWeek, endOfWeek } from 'date-fns';
@@ -165,11 +166,12 @@ export default function Reports() {
                             <div className="animate-spin h-8 w-8 border-4 border-primary-500 border-t-transparent rounded-full"></div>
                         </div>
                     ) : stats ? (
-                        <div className="space-y-6">
+                        <div className="space-y-6 pb-20">
                             <SummaryCards stats={stats} />
 
-                            <div className="space-y-6">
+                            <div className="grid grid-cols-1 gap-6">
                                 <ItemBreakdown breakdown={stats.itemTypeBreakdown} />
+                                <CustomerReport transactions={stats.transactions} />
                             </div>
                         </div>
                     ) : null}

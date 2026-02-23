@@ -65,10 +65,9 @@ export function AuthProvider({ children }) {
                 console.error('AuthContext: Load error', error);
                 if (isMounted) setUser(null);
             } finally {
-                if (isMounted) {
-                    setLoading(false);
-                    isFetching.current = false;
-                }
+                setLoading(false);
+                isFetching.current = false;
+                console.log('AuthContext: Loading finished');
             }
         }
 

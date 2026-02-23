@@ -49,7 +49,12 @@ export async function getSession() {
 export async function getCurrentUser() {
     const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-    if (userError) throw userError;
+    if (userError) {
+        if (userError.name === 'AuthSessionMissingError' || userError.message?.includes('session missing')) {
+            return null;
+        }
+        throw userError;
+    }
     if (!user) return null;
 
     // Fetch user profile
